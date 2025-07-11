@@ -16,6 +16,7 @@ const Home: React.FC = () => {
         <Button onClick={() => navigate('/upload')}>습득한 유실물 등록하기</Button>
         <Button onClick={() => navigate('/result')}>등록된 유실물 보기</Button>
         <Button onClick={() => navigate('/match')}>내 물건 찾기</Button>
+        <Button onClick={()=> navigate('/My-Items')}>내가 등록한 유실물 확인하기</Button>
       </div>
     </div>
   );

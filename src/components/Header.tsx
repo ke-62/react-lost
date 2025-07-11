@@ -1,25 +1,46 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import Button from './Button';
 
 const Header: React.FC = () => {
-    return (
-        <header className='bg-white shadow-md px-6 py-4 flex justify-between items-center'>
-            <Link to = "/" className="text-xl font-bold text-blue-600">
-                유실물 찾기
-            </Link>
-            <nav className="space-x-4">
-                <Link to = "/upload" className="text-gray-700 hover:text-blue-600">
-                    업로드
-                </Link>
-                <Link to = "/result" className="text-gray-700 hover:text-blue-600">
-                    결과
-                </Link>
-                <Link to ="/login" className="text-gray-700 hover:text-blue-600">
-                    로그인
-                </Link>
-            </nav>
-        </header>
-    );
+  const navigate = useNavigate();
+  const location = useLocation();
+  const isHome = location.pathname === '/';
+  const isLoggedIn = !!localStorage.getItem('token');
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    alert('로그아웃 되었습니다.');
+    navigate('/');
+  };
+
+  return (
+    <header className="w-full fixed top-0 left-0 z-50 flex justify-between items-center p-4 bg-zinc-700 text-white">
+      {isHome ? (
+        <>
+          <div className="text-xl font-bold cursor-pointer" onClick={() => navigate('/')}>AI 유실물 시스템</div>
+          <div>
+            {isLoggedIn ? (
+              <Button onClick={handleLogout} className="bg-white text-black px-3 py-1 rounded">
+                로그아웃
+              </Button>
+            ) : (
+              <Button onClick={() => navigate('/login')} className="bg-white text-black px-3 py-1 rounded">
+                로그인
+              </Button>
+            )}
+          </div>
+        </>
+      ) : (
+        <div className="w-full flex justify-end">
+          <Button onClick={() => navigate('/')} className="bg-white text-black px-3 py-1 rounded">
+            홈화면 가기
+          </Button>
+        </div>
+      )}
+    </header>
+  );
 };
 
 export default Header;

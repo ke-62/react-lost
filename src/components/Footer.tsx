@@ -1,11 +1,11 @@
-import react from 'react';
+import React from 'react';
 
 const Footer: React.FC = () => {
-    return (
-        <footer className="bg-gray-100 text-center py-4 mt-10 text-sm text-gray-600">
-            &copy; {new Date().getFullYear()} Sejong University - Lost&Found Project
-        </footer>
-    );
+  return (
+    <footer className="w-full fixed bottom-0 left-0 bg-zinc-700 text-white text-center py-2 text-sm z-40">
+      © 2025-2 창의학기제 프로젝트
+    </footer>
+  );
 };
 
 export default Footer;
