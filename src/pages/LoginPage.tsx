@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Button from '../components/Button';
+import Button from '../components/common/Button';
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -43,8 +43,8 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="w-full flex justify-center mt-20 px-4">
-      <div className="w-full max-w-sm p-6 rounded-lg bg-zinc-800 shadow-md">
+    <div className="w-screen flex justify-center mt-20 px-4">
+      <div className="w-screen max-w-sm p-6 rounded-lg bg-zinc-800 shadow-md">
         <h2 className="text-2xl font-bold mb-6 text-center text-white">로그인</h2>
         <input
           type="text"

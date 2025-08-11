@@ -1,29 +1,43 @@
 import React from 'react';
-import { BrowserRouter,Routes, Route } from 'react-router-dom';
-// BrowserRouter,
-import Header from './components/Header';
-import Footer from './components/Footer';
-import Home from './pages/Home';
-import UpLoad from './pages/Upload';
-import Result from './pages/Result';
-import Login from './pages/Login';
-import Match from './pages/match';
-import MyItems from './pages/MyItems';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from 'styled-components';
+import theme from './styles/theme';
+import { GlobalStyle } from './styles/GlobalStyle';
 
-function App(){
+// Layout 및 페이지 컴포넌트 임포트
+import Layout from './components/layout/Layout';
+import MainPage from './pages/MainPage';
+import PostListPage from './pages/PostListPage';
+import PostDetailPage from './pages/PostDetailPage';
+import PostWritePage from './pages/PostWritePage';
+import MyPage from './pages/MyPage';
+import LoginPage from './pages/LoginPage';
+import ChatListPage from './pages/ChatListPage';
+import ChatRoomPage from './pages/ChatRoomPage';
+
+function App() {
   return (
-    <BrowserRouter>
-      <Header />
+    <ThemeProvider theme={theme}>
+      <GlobalStyle />
+      <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/Upload" element={<UpLoad />} />
-          <Route path="/Result" element={<Result />} />
-          <Route path="/Login" element={<Login />} />
-          <Route path="/Match" element={<Match />} />
-          <Route path="/My-Items" element={<MyItems />} />
+          {/* Header와 Footer가 포함된 공통 레이아웃을 사용하는 페이지 그룹 */}
+          <Route path="/" element={<Layout />}>
+            {/* path="/"가 Layout의 기본 페이지가 됨 */}
+            <Route index element={<MainPage />} />
+            <Route path="posts" element={<PostListPage />} />
+            <Route path="posts/:id" element={<PostDetailPage />} />
+            <Route path="write" element={<PostWritePage />} />
+            <Route path="mypage" element={<MyPage />} />
+            <Route path="chats" element={<ChatListPage />} />
+            <Route path="chats/:id" element={<ChatRoomPage />} />
+          </Route>
+
+          {/* 공통 레이아웃을 사용하지 않는 페이지 */}
+          <Route path="/login" element={<LoginPage />} />
         </Routes>
-      <Footer />
-    </BrowserRouter>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 
