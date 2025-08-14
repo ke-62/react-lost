@@ -2,8 +2,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import useAuth from '../hooks/useAuth'; 
 
 const Header = () => {
+  const { isLoggedIn } = useAuth(); 
+
   return (
     <HeaderWrapper>
       <HeaderContent>
@@ -13,12 +16,23 @@ const Header = () => {
         <Nav>
           <NavLink to="/posts?type=lost">분실물</NavLink>
           <NavLink to="/posts?type=found">습득물</NavLink>
+  
+         {isLoggedIn ? (
+          <>
+          <NavLink to="/chats">쪽지함</NavLink>
           <NavLink to="/mypage">마이페이지</NavLink>
-          <NavLink to="/login">로그인</NavLink>
-        </Nav>
+          </>
+        ) : (
+      <>
+      {/* '회원가입' 링크 추가 및 경로 수정 */}
+      <NavLink to="/signup">회원가입</NavLink>
+      <NavLink to="/login">로그인</NavLink>
+      </>
+    )}
+    </Nav>
       </HeaderContent>
-    </HeaderWrapper>
-  );
+      </HeaderWrapper>
+    );
 };
 
 export default Header;
@@ -51,6 +65,7 @@ const Logo = styled.h1`
 const Nav = styled.nav`
   display: flex;
   gap: 1.5rem;
+  align-items: center;
 `;
 
 const NavLink = styled(Link)`

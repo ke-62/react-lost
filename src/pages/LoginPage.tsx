@@ -1,74 +1,53 @@
+// /src/pages/LoginPage.tsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Button from '../components/common/Button';
+import { Link, useNavigate } from 'react-router-dom';
+import logoImage from '../assets/mainLogo.png'; 
+import * as S from '../components/common/AuthStyles'; 
 
-const Login: React.FC = () => {
-  const [username, setUsername] = useState('');
+// 아이콘 파일들을 임포트합니다.
+import userIcon from '../assets/mypage.png';
+import lockIcon from '../assets/lock.png';
+
+const LoginPage = () => {
+  const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
-    if (!username || !password) {
-      alert('학번과 비밀번호를 입력하세요');
-      return;
-    }
-// 임시확인용
-    if (username === '24010964' && password === '1234') {
-      localStorage.setItem('token', 'dummy-token');
-      localStorage.setItem('username', username);
-      alert(`환영합니다, ${username}님!`);
-      navigate('/');
-      return;
-    }
-    try {
-      const res = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('username', username);
-        alert(`환영합니다, ${username}님!`);
-        navigate('/');
-      } else {
-        alert(data.message || '로그인 실패');
-      }
-    } catch (err) {
-      alert('서버 오류');
-    }
+  const handleLogin = () => {
+    console.log('로그인 시도:', id, password);
+    navigate('/');
   };
 
   return (
-    <div className="w-screen flex justify-center mt-20 px-4">
-      <div className="w-screen max-w-sm p-6 rounded-lg bg-zinc-800 shadow-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-white">로그인</h2>
-        <input
+    <S.AuthPageContainer>
+      <S.Logo src={logoImage} alt="세만추 로고" />
+      
+      <S.FieldRow>
+        <S.InputIcon src={userIcon} alt="user icon" />
+        <S.InputField
           type="text"
-          placeholder="학번"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="w-full mb-4 px-3 py-2 rounded bg-zinc-700 text-white placeholder-gray-400"
+          placeholder="아이디(학번)"
+          value={id}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setId(e.target.value)}
         />
-        <input
+      </S.FieldRow>
+
+      <S.FieldRow>
+        <S.InputIcon src={lockIcon} alt="lock icon" />
+        <S.InputField
           type="password"
           placeholder="비밀번호"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full mb-6 px-3 py-2 rounded bg-zinc-700 text-white placeholder-gray-400"
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
         />
-        <Button
-          onClick={handleLogin}
-          className="w-full bg-black text-white py-2 rounded hover:bg-zinc-900"
-        >
-          로그인
-        </Button>
-      </div>
-    </div>
+      </S.FieldRow>
+
+      <S.AuthButton onClick={handleLogin}>로그인</S.AuthButton>
+      <S.ActionLink>
+        계정이 없으신가요? <Link to="/signup">회원가입</Link>
+      </S.ActionLink>
+    </S.AuthPageContainer>
   );
 };
 
-export default Login;
+export default LoginPage;

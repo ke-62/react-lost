@@ -3,15 +3,27 @@
 import { createGlobalStyle } from 'styled-components';
 
 export const GlobalStyle = createGlobalStyle`
-  * {
-    box-sizing: border-box;
+  html, body, #root {
+    height: 100%; 
     margin: 0;
     padding: 0;
+  }
+
+  * {
+    box-sizing: border-box;
   }
 
   body {
     font-family: 'Noto Sans KR', sans-serif;
     line-height: 1.5;
+    
+    background: linear-gradient(
+      180deg, 
+      #FDFBFF 0%, 
+      #FCE1F0 60%, 
+      #EADCFE 100% 
+    );
+    background-attachment: fixed; 
   }
 
   a {

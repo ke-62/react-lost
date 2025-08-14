@@ -1,3 +1,4 @@
+// /src/App.tsx
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from 'styled-components';
@@ -12,6 +13,7 @@ import PostDetailPage from './pages/PostDetailPage';
 import PostWritePage from './pages/PostWritePage';
 import MyPage from './pages/MyPage';
 import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage'; // SignupPage 임포트
 import ChatListPage from './pages/ChatListPage';
 import ChatRoomPage from './pages/ChatRoomPage';
 
@@ -21,13 +23,12 @@ function App() {
       <GlobalStyle />
       <BrowserRouter>
         <Routes>
-          {/* 메인 페이지는 헤더/푸터가 없는 독립적인 레이아웃을 사용합니다. */}
+          {/* 독립적인 레이아웃을 사용하는 페이지들 */}
           <Route path="/" element={<MainPage />} />
-
-          {/* 로그인 페이지도 독립적인 레이아웃을 사용합니다. */}
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} /> {/* SignupPage 라우터 추가 */}
 
-          {/* 나머지 페이지들은 Header와 Footer가 포함된 공통 레이아웃을 사용합니다. */}
+          {/* 공통 레이아웃(Header, Footer)을 사용하는 페이지들 */}
           <Route element={<Layout />}>
             <Route path="posts" element={<PostListPage />} />
             <Route path="posts/:id" element={<PostDetailPage />} />
