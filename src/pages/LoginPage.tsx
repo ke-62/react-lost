@@ -3,8 +3,6 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import logoImage from '../assets/mainLogo.png'; 
 import * as S from '../components/common/AuthStyles'; 
-
-// 아이콘 파일들을 임포트합니다.
 import userIcon from '../assets/mypage.png';
 import lockIcon from '../assets/lock.png';
 
@@ -22,8 +20,11 @@ const LoginPage = () => {
     <S.AuthPageContainer>
       <S.Logo src={logoImage} alt="세만추 로고" />
       
+      {/* 🎨 아이콘을 IconWrapper로 감싸줍니다. */}
       <S.FieldRow>
-        <S.InputIcon src={userIcon} alt="user icon" />
+        <S.IconWrapper>
+          <S.InputIcon src={userIcon} alt="user icon" />
+        </S.IconWrapper>
         <S.InputField
           type="text"
           placeholder="아이디(학번)"
@@ -32,8 +33,11 @@ const LoginPage = () => {
         />
       </S.FieldRow>
 
+      {/* 🎨 아이콘을 IconWrapper로 감싸줍니다. */}
       <S.FieldRow>
-        <S.InputIcon src={lockIcon} alt="lock icon" />
+        <S.IconWrapper>
+          <S.InputIcon src={lockIcon} alt="lock icon" />
+        </S.IconWrapper>
         <S.InputField
           type="password"
           placeholder="비밀번호"

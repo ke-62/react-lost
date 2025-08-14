@@ -2,60 +2,63 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import useAuth from '../hooks/useAuth'; 
+import useAuth from '../hooks/useAuth';
 
 const Header = () => {
-  const { isLoggedIn } = useAuth(); 
+  const { isLoggedIn } = useAuth();
 
   return (
     <HeaderWrapper>
       <HeaderContent>
-        <Logo>
-          <Link to="/">세만추</Link>
-        </Logo>
+        <PlaceholderLogo>
+          <Link to="/">Who Made This</Link>
+        </PlaceholderLogo>
         <Nav>
-          <NavLink to="/posts?type=lost">분실물</NavLink>
-          <NavLink to="/posts?type=found">습득물</NavLink>
-  
-         {isLoggedIn ? (
-          <>
-          <NavLink to="/chats">쪽지함</NavLink>
-          <NavLink to="/mypage">마이페이지</NavLink>
-          </>
-        ) : (
-      <>
-      {/* '회원가입' 링크 추가 및 경로 수정 */}
-      <NavLink to="/signup">회원가입</NavLink>
-      <NavLink to="/login">로그인</NavLink>
-      </>
-    )}
-    </Nav>
+          {isLoggedIn ? (
+            <>
+              <NavLink to="/chats">쪽지함</NavLink>
+              <Separator>|</Separator>
+              <NavLink to="/mypage">마이페이지</NavLink>
+            </>
+          ) : (
+            <>
+              <NavLink to="/signup">회원가입</NavLink>
+              <Separator>|</Separator>
+              <NavLink to="/login">로그인</NavLink>
+            </>
+          )}
+        </Nav>
       </HeaderContent>
-      </HeaderWrapper>
-    );
+    </HeaderWrapper>
+  );
 };
 
 export default Header;
 
-// 헤더의 배경색과 전체 너비를 설정
+// --- Styled Components ---
+
 const HeaderWrapper = styled.header`
   width: 100%;
-  border-bottom: 1px solid #eee;
+  background-color: #fff;
+  border-bottom: 1px solid #f0f0f0;
   padding: 1rem 0;
 `;
 
-// 헤더 내용물을 담고 가운데 정렬하는 컨테이너
 const HeaderContent = styled.div`
   max-width: 1200px;
-  margin: 0 auto; // 이 부분이 가운데 정렬의 핵심입니다.
+  margin: 0 auto;
   padding: 0 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
 `;
 
-const Logo = styled.h1`
-  font-size: 1.5rem;
+const PlaceholderLogo = styled.div`
+  font-weight: bold;
+  color: #a0a0a0;
+  opacity: 0.7;
+  font-size: 0.9rem;
+
   a {
     text-decoration: none;
     color: inherit;
@@ -64,15 +67,22 @@ const Logo = styled.h1`
 
 const Nav = styled.nav`
   display: flex;
-  gap: 1.5rem;
   align-items: center;
 `;
 
 const NavLink = styled(Link)`
   text-decoration: none;
-  color: #555;
-  font-weight: 500;
+  color: #504791; /* 🎨 피그마 디자인의 보라색으로 직접 지정합니다. */
+  font-weight: bold;
+  font-size: 0.9rem;
+  padding: 0 0.75rem;
+
   &:hover {
-    color: ${({ theme }) => theme.colors.primary};
+    text-decoration: underline;
   }
+`;
+
+const Separator = styled.span`
+  color: #d2d2d2;
+  font-size: 0.8rem;
 `;

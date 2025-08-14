@@ -1,10 +1,9 @@
 // /src/pages/MainPage.tsx
-// 서비스의 메인 페이지
-import React, { useState, useRef } from 'react'; // 1. useState와 useRef를 import 합니다.
+import React, { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import CampusMap from '../components/map/CampusMap';
-import logoImage from '../assets/logo.png';
+import logoImage from '../assets/mainLogo.png'; // ⚠️ MainPage에서는 이 로고를 사용합니다.
 import useAuth from '../components/hooks/useAuth';
 import lensIcon from '../assets/lens.png';
 import cameraIcon from '../assets/camera.png';
@@ -13,36 +12,28 @@ const MainPage = () => {
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
   
-  // 2. 검색어 입력을 관리할 state를 추가합니다.
   const [searchTerm, setSearchTerm] = useState('');
-
-  // 3. 숨겨진 파일 입력(input)에 접근하기 위한 ref를 생성합니다.
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // 4. 검색 실행 함수를 만듭니다. (Enter키, 돋보기 클릭 시 사용)
   const executeSearch = () => {
     if (searchTerm.trim() !== '') {
       navigate(`/posts?search=${searchTerm.trim()}`);
     }
   };
 
-  // 5. Enter 키를 눌렀을 때 검색을 실행하는 핸들러입니다.
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       executeSearch();
     }
   };
   
-  // 6. 카메라 아이콘을 클릭했을 때 파일 선택 창을 여는 핸들러입니다.
   const handleCameraClick = () => {
     fileInputRef.current?.click();
   };
 
-  // 7. 이미지 파일이 선택되었을 때 처리하는 핸들러입니다.
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // TODO: 이미지 검색 API 호출 로직 구현
       console.log('선택된 이미지 파일:', file.name);
       alert(`${file.name} 이미지를 검색합니다. (기능 구현 필요)`);
     }
@@ -50,6 +41,7 @@ const MainPage = () => {
 
   return (
     <PageWrapper>
+      {/* 🎨 수정된 헤더 부분 */}
       <MinimalHeader>
         <div className="placeholder">Who Made This</div>
         <AuthLinks>
@@ -72,21 +64,20 @@ const MainPage = () => {
       <LandingContainer>
         <Logo src={logoImage} alt="세만추 로고" />
         <SearchWrapper>
-          <SearchIcon isLeft={true} onClick={executeSearch}> {/* 돋보기 클릭 시 검색 실행 */}
+          <SearchIcon isLeft={true} onClick={executeSearch}>
             <img src={lensIcon} alt="검색" />
           </SearchIcon>
           <SearchInput
             type="text"
             placeholder="검색어를 입력해주세요"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)} // 입력값을 state에 반영
-            onKeyDown={handleKeyDown} // Enter키 이벤트 연결
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
-          <SearchIcon isLeft={false} onClick={handleCameraClick}> {/* 카메라 클릭 시 파일 선택창 열기 */}
+          <SearchIcon isLeft={false} onClick={handleCameraClick}>
             <img src={cameraIcon} alt="이미지 검색" />
           </SearchIcon>
         </SearchWrapper>
-        {/* 숨겨진 파일 업로드 input */}
         <input 
           type="file" 
           accept="image/*" 
@@ -127,7 +118,7 @@ const MainPage = () => {
 
 export default MainPage;
 
-// --- Styled Components (이하 동일) ---
+// --- Styled Components ---
 const PageWrapper = styled.div``;
 
 const MinimalHeader = styled.header`
@@ -155,9 +146,13 @@ const AuthLinks = styled.div`
   align-items: center;
   
   a {
-    color: #555;
+    /* 🎨 메인 페이지의 링크 색상도 동일하게 수정합니다. */
+    color: #504791;
     text-decoration: none;
     font-weight: bold;
+    font-size: 0.9rem;
+    padding: 0 0.75rem;
+
     &:hover {
       text-decoration: underline;
     }
@@ -169,6 +164,7 @@ const Separator = styled.span`
   color: #d2d2d2;
 `;
 
+// ... (LandingContainer 이하 나머지 스타일은 이전과 동일)
 const LandingContainer = styled.section`
   display: flex;
   flex-direction: column;

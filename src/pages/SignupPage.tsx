@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import logoImage from '../assets/mainLogo.png'; 
 import * as S from '../components/common/AuthStyles';
-
 import userIcon from '../assets/mypage.png';
 import lockIcon from '../assets/lock.png';
 
@@ -32,8 +31,11 @@ const SignupPage = () => {
     <S.AuthPageContainer>
       <S.Logo src={logoImage} alt="세만추 로고" />
       
+      {/* 🎨 아이콘을 IconWrapper로 감싸줍니다. */}
       <S.FieldRow>
-        <S.InputIcon src={userIcon} alt="user icon" />
+        <S.IconWrapper>
+          <S.InputIcon src={userIcon} alt="user icon" />
+        </S.IconWrapper>
         <S.InputField
           type="text"
           placeholder="이름(닉네임)"
@@ -43,8 +45,11 @@ const SignupPage = () => {
       </S.FieldRow>
 
       <FieldWithButtonWrapper>
+        {/* 🎨 아이콘을 IconWrapper로 감싸줍니다. */}
         <S.FieldRow style={{ flexGrow: 1, marginRight: '1rem', marginBottom: 0 }}>
-          <S.InputIcon src={userIcon} alt="user icon" />
+          <S.IconWrapper>
+            <S.InputIcon src={userIcon} alt="user icon" />
+          </S.IconWrapper>
           <S.InputField
             type="text"
             placeholder="아이디(학번)"
@@ -54,9 +59,12 @@ const SignupPage = () => {
         </S.FieldRow>
         <CheckButton onClick={handleIdCheck}>아이디 중복 확인</CheckButton>
       </FieldWithButtonWrapper>
-
+      
+      {/* 🎨 아이콘을 IconWrapper로 감싸줍니다. */}
       <S.FieldRow>
-        <S.InputIcon src={lockIcon} alt="lock icon" />
+        <S.IconWrapper>
+          <S.InputIcon src={lockIcon} alt="lock icon" />
+        </S.IconWrapper>
         <S.InputField
           type="password"
           placeholder="비밀번호"
@@ -65,8 +73,11 @@ const SignupPage = () => {
         />
       </S.FieldRow>
 
+      {/* 🎨 아이콘을 IconWrapper로 감싸줍니다. */}
       <S.FieldRow>
-        <S.InputIcon src={lockIcon} alt="lock icon" />
+        <S.IconWrapper>
+          <S.InputIcon src={lockIcon} alt="lock icon" />
+        </S.IconWrapper>
         <S.InputField
           type="password"
           placeholder="비밀번호 확인"
@@ -85,6 +96,7 @@ const SignupPage = () => {
 
 export default SignupPage;
 
+// ... (FieldWithButtonWrapper, CheckButton 등 나머지 코드는 동일)
 const FieldWithButtonWrapper = styled.div`
   display: flex;
   align-items: center;
