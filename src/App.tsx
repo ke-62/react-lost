@@ -21,10 +21,14 @@ function App() {
       <GlobalStyle />
       <BrowserRouter>
         <Routes>
-          {/* Header와 Footer가 포함된 공통 레이아웃을 사용하는 페이지 그룹 */}
-          <Route path="/" element={<Layout />}>
-            {/* path="/"가 Layout의 기본 페이지가 됨 */}
-            <Route index element={<MainPage />} />
+          {/* 메인 페이지는 헤더/푸터가 없는 독립적인 레이아웃을 사용합니다. */}
+          <Route path="/" element={<MainPage />} />
+
+          {/* 로그인 페이지도 독립적인 레이아웃을 사용합니다. */}
+          <Route path="/login" element={<LoginPage />} />
+
+          {/* 나머지 페이지들은 Header와 Footer가 포함된 공통 레이아웃을 사용합니다. */}
+          <Route element={<Layout />}>
             <Route path="posts" element={<PostListPage />} />
             <Route path="posts/:id" element={<PostDetailPage />} />
             <Route path="write" element={<PostWritePage />} />
@@ -32,9 +36,6 @@ function App() {
             <Route path="chats" element={<ChatListPage />} />
             <Route path="chats/:id" element={<ChatRoomPage />} />
           </Route>
-
-          {/* 공통 레이아웃을 사용하지 않는 페이지 */}
-          <Route path="/login" element={<LoginPage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

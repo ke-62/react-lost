@@ -5,7 +5,12 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    react(),
+    react({
+      // styled-components를 위한 babel 설정 추가
+      babel: {
+        plugins: ['babel-plugin-styled-components'],
+      },
+    }),
   ],
 
   server: {
