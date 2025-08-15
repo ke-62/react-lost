@@ -1,18 +1,32 @@
-// /src/components/layout/Header.tsx
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import useAuth from '../hooks/useAuth';
+import Logo from '../../assets/Logo.png';
 
 const Header = () => {
   const { isLoggedIn } = useAuth();
+  const location = useLocation(); 
+
+  const textLogoPaths = ['/', '/login', '/signup', '/mypage'];
+
+  const showTextLogo = textLogoPaths.includes(location.pathname);
 
   return (
     <HeaderWrapper>
       <HeaderContent>
-        <PlaceholderLogo>
-          <Link to="/">Who Made This</Link>
-        </PlaceholderLogo>
+        {showTextLogo ? (
+
+          <PlaceholderLogo>
+            <Link to="/">Who Made This</Link>
+          </PlaceholderLogo>
+        ) : (
+          <ImageLogo>
+            <Link to="/">
+              <img src={Logo} alt="세만추 로고" />
+            </Link>
+          </ImageLogo>
+        )}
         <Nav>
           {isLoggedIn ? (
             <>
@@ -59,6 +73,16 @@ const PlaceholderLogo = styled.div`
   a {
     text-decoration: none;
     color: inherit;
+  }
+`;
+
+const ImageLogo = styled.div`
+  a {
+    display: flex;
+    align-items: center;
+  }
+  img {
+    height: 40px; // 로고 이미지 높이 조절
   }
 `;
 
