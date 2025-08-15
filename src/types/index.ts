@@ -4,9 +4,9 @@
 // 사용자 정보
 export interface User {
   id: number;
-  student_id: string;
-  nickname: string;
-  email: string;
+  student_id: string; // 학번
+  nickname: string;   // 닉네임
+  password: string;   // 비밀번호
   created_at: string;
   updated_at: string;
 }
@@ -61,7 +61,6 @@ export interface UserCredentials {
 // 회원가입 시 필요한 데이터 타입
 export interface UserSignupData extends UserCredentials {
   nickname: string;
-  email: string;
 }
 
 // 로그인 성공 시 백엔드로부터 받을 응답 타입

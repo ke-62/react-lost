@@ -3,10 +3,11 @@ import React, { useState, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import CampusMap from '../components/map/CampusMap';
-import logoImage from '../assets/mainLogo.png'; // ⚠️ MainPage에서는 이 로고를 사용합니다.
+import logoImage from '../assets/Logo.png'; 
 import useAuth from '../components/hooks/useAuth';
 import lensIcon from '../assets/lens.png';
 import cameraIcon from '../assets/camera.png';
+import Header from '../components/layout/Header'
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -41,25 +42,7 @@ const MainPage = () => {
 
   return (
     <PageWrapper>
-      {/* 🎨 수정된 헤더 부분 */}
-      <MinimalHeader>
-        <div className="placeholder">Who Made This</div>
-        <AuthLinks>
-          {isLoggedIn ? (
-            <>
-              <Link to="/chats">쪽지함</Link>
-              <Separator>|</Separator>
-              <Link to="/mypage">마이페이지</Link>
-            </>
-          ) : (
-            <>
-              <Link to="/signup">회원가입</Link>
-              <Separator>|</Separator>
-              <Link to="/login">로그인</Link>
-            </>
-          )}
-        </AuthLinks>
-      </MinimalHeader>
+      <Header />
 
       <LandingContainer>
         <Logo src={logoImage} alt="세만추 로고" />

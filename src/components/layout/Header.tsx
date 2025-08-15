@@ -35,12 +35,10 @@ const Header = () => {
 
 export default Header;
 
-// --- Styled Components ---
-
 const HeaderWrapper = styled.header`
   width: 100%;
-  background-color: #fff;
-  border-bottom: 1px solid #f0f0f0;
+  background: transparent;
+  // border-bottom: 1px solid #f0f0f0;
   padding: 1rem 0;
 `;
 
