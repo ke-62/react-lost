@@ -13,10 +13,15 @@ const SignupPage = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [nickname, setNickname] = useState('');
+  const [isIdChecked, setIsIdChecked] = useState(false); // 아이디 확인 상태 추가
   const navigate = useNavigate();
-  const { setUser } = useAuth(); // 전역 상태를 업데이트할 setUser 함수
+  const { setUser } = useAuth();
 
   const handleSignup = () => {
+    if (!isIdChecked) {
+      alert('아이디 중복 확인을 해주세요.');
+      return;
+    }
     if (!nickname || !student_id || !password || !confirmPassword) {
       alert('모든 필드를 입력해주세요.');
       return; 
@@ -26,7 +31,6 @@ const SignupPage = () => {
       return; 
     }
 
-    // 임시 사용자 객체 생성
     const newUser: User = {
       id: Date.now(), 
       student_id: student_id,
@@ -41,12 +45,25 @@ const SignupPage = () => {
   };
 
   const handleIdCheck = () => {
+    if (!student_id.trim()) {
+      alert('아이디를 입력해주세요.');
+      return;
+    }
+    // (실제로는 여기서 백엔드 API로 중복 확인 요청을 보냅니다)
     alert('사용 가능한 아이디입니다.');
+    setIsIdChecked(true);
+  };
+
+  const handleIdInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setStudentId(e.target.value);
+    setIsIdChecked(false); 
   };
 
   return (
     <S.AuthPageContainer>
-      <S.Logo src={logoImage} alt="세만추 로고" />
+      <Link to ="/">
+        <S.Logo src={logoImage} alt="세만추 로고" />
+      </Link>
       
       <S.FieldRow>
         <S.IconWrapper>
@@ -69,10 +86,16 @@ const SignupPage = () => {
             type="text"
             placeholder="아이디(학번)"
             value={student_id}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setStudentId(e.target.value)}
+            onChange={handleIdInputChange} 
           />
         </S.FieldRow>
-        <CheckButton onClick={handleIdCheck}>아이디 중복 확인</CheckButton>
+        <CheckButton 
+          onClick={handleIdCheck}
+          disabled={isIdChecked} 
+          isChecked={isIdChecked} 
+        >
+          {isIdChecked ? '완료' : '아이디 중복 확인'}
+        </CheckButton>
       </FieldWithButtonWrapper>
       
       <S.FieldRow>
@@ -117,19 +140,19 @@ const FieldWithButtonWrapper = styled.div`
   margin-bottom: 1.5rem;
 `;
 
-const CheckButton = styled.button`
+const CheckButton = styled.button<{ isChecked?: boolean }>`
   padding: 0.9rem 1rem;
-  background-color: #504791;
+  background-color: ${({ isChecked }) => (isChecked ? '#a0a0a0' : '#504791')};
   color: white;
   border: none;
   border-radius: 8px;
   font-size: 0.9rem;
   font-weight: bold;
-  cursor: pointer;
+  cursor: ${({ isChecked }) => (isChecked ? 'not-allowed' : 'pointer')};
   flex-shrink: 0;
   transition: background-color 0.2s ease-in-out;
   
   &:hover {
-    background-color: #685DAA;
+    background-color: ${({ isChecked }) => (isChecked ? '#a0a0a0' : '#685DAA')};
   }
 `;

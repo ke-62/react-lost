@@ -14,7 +14,6 @@ const LoginPage = () => {
   const { setUser } = useAuth(); // 전역 상태를 업데이트할 setUser 함수
 
   const handleLogin = () => {
-    // 임시 아이디와 비밀번호
     const tempId = '25012345';
     const tempPassword = '1234';
 
@@ -32,8 +31,6 @@ const LoginPage = () => {
 
       // "로그인된 상태"로 만들기
       setUser(mockUser);
-      
-      alert('로그인 성공!');
       navigate('/'); 
     } else {
       alert('아이디 또는 비밀번호가 일치하지 않습니다.');
@@ -42,8 +39,9 @@ const LoginPage = () => {
 
   return (
     <S.AuthPageContainer>
-      <S.Logo src={logoImage} alt="세만추 로고" />
-      
+      <Link to ="/">
+        <S.Logo src={logoImage} alt="세만추 로고" />
+      </Link>
       <S.FieldRow>
         <S.IconWrapper>
           <S.InputIcon src={userIcon} alt="user icon" />
