@@ -14,13 +14,11 @@ const PostWritePage = () => {
     <form onSubmit={handleSubmit}>
       <h2>게시글 작성</h2>
       
-      {/* 습득물/분실물 구분 [cite: 31] */}
       <div>
         <label><input type="radio" name="type" value="lost" defaultChecked /> 분실물</label>
         <label><input type="radio" name="type" value="found" /> 습득물</label>
       </div>
 
-      {/* 이미지, 제목, 일자, 위치 등 [cite: 32] */}
       <div><label>제목: <input type="text" name="title" /></label></div>
       <div><label>날짜: <input type="date" name="item_date" /></label></div>
       <div><label>장소(건물): <input type="text" name="location" /></label></div>

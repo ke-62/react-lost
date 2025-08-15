@@ -1,25 +1,42 @@
-// /src/pages/SignupPage.tsx
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
-import logoImage from '../assets/mainLogo.png'; 
+import logoImage from '../assets/mainLogo.png';
 import * as S from '../components/common/AuthStyles';
 import userIcon from '../assets/mypage.png';
 import lockIcon from '../assets/lock.png';
+import useAuth from '../components/hooks/useAuth'; 
+import { User } from '../types'; 
 
 const SignupPage = () => {
-  const [id, setId] = useState('');
+  const [student_id, setStudentId] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [nickname, setNickname] = useState('');
   const navigate = useNavigate();
+  const { setUser } = useAuth(); // 전역 상태를 업데이트할 setUser 함수
 
   const handleSignup = () => {
+    if (!nickname || !student_id || !password || !confirmPassword) {
+      alert('모든 필드를 입력해주세요.');
+      return; 
+    }
     if (password !== confirmPassword) {
       alert('비밀번호가 일치하지 않습니다.');
-      return;
+      return; 
     }
-    console.log('회원가입 시도:', { id, password, nickname });
+
+    // 임시 사용자 객체 생성
+    const newUser: User = {
+      id: Date.now(), 
+      student_id: student_id,
+      nickname: nickname,
+      password: '',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+
+    alert('회원가입이 완료되었습니다.');
     navigate('/login');
   };
 
@@ -31,7 +48,6 @@ const SignupPage = () => {
     <S.AuthPageContainer>
       <S.Logo src={logoImage} alt="세만추 로고" />
       
-      {/* 🎨 아이콘을 IconWrapper로 감싸줍니다. */}
       <S.FieldRow>
         <S.IconWrapper>
           <S.InputIcon src={userIcon} alt="user icon" />
@@ -45,7 +61,6 @@ const SignupPage = () => {
       </S.FieldRow>
 
       <FieldWithButtonWrapper>
-        {/* 🎨 아이콘을 IconWrapper로 감싸줍니다. */}
         <S.FieldRow style={{ flexGrow: 1, marginRight: '1rem', marginBottom: 0 }}>
           <S.IconWrapper>
             <S.InputIcon src={userIcon} alt="user icon" />
@@ -53,14 +68,13 @@ const SignupPage = () => {
           <S.InputField
             type="text"
             placeholder="아이디(학번)"
-            value={id}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setId(e.target.value)}
+            value={student_id}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setStudentId(e.target.value)}
           />
         </S.FieldRow>
         <CheckButton onClick={handleIdCheck}>아이디 중복 확인</CheckButton>
       </FieldWithButtonWrapper>
       
-      {/* 🎨 아이콘을 IconWrapper로 감싸줍니다. */}
       <S.FieldRow>
         <S.IconWrapper>
           <S.InputIcon src={lockIcon} alt="lock icon" />
@@ -73,7 +87,6 @@ const SignupPage = () => {
         />
       </S.FieldRow>
 
-      {/* 🎨 아이콘을 IconWrapper로 감싸줍니다. */}
       <S.FieldRow>
         <S.IconWrapper>
           <S.InputIcon src={lockIcon} alt="lock icon" />
@@ -96,7 +109,6 @@ const SignupPage = () => {
 
 export default SignupPage;
 
-// ... (FieldWithButtonWrapper, CheckButton 등 나머지 코드는 동일)
 const FieldWithButtonWrapper = styled.div`
   display: flex;
   align-items: center;

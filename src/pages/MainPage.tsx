@@ -7,7 +7,8 @@ import logoImage from '../assets/Logo.png';
 import useAuth from '../components/hooks/useAuth';
 import lensIcon from '../assets/lens.png';
 import cameraIcon from '../assets/camera.png';
-import Header from '../components/layout/Header'
+import Header from '../components/layout/Header';
+import Footer from '../components/layout/Footer';
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -92,9 +93,7 @@ const MainPage = () => {
         </MapWrapper>
       </MapSection>
 
-      <MinimalFooter>
-        <p>© 2025-2 창의학기제 프로젝트. All rights reserved.</p>
-      </MinimalFooter>
+      <Footer/>
     </PageWrapper>
   );
 };
@@ -104,50 +103,6 @@ export default MainPage;
 // --- Styled Components ---
 const PageWrapper = styled.div``;
 
-const MinimalHeader = styled.header`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  width: 100%;
-  z-index: 10;
-  color: #A0A0A0;
-  font-size: 0.9rem;
-
-  .placeholder {
-    font-weight: bold;
-    opacity: 0.7;
-  }
-`;
-
-const AuthLinks = styled.div`
-  display: flex;
-  align-items: center;
-  
-  a {
-    /* 🎨 메인 페이지의 링크 색상도 동일하게 수정합니다. */
-    color: #504791;
-    text-decoration: none;
-    font-weight: bold;
-    font-size: 0.9rem;
-    padding: 0 0.75rem;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-`;
-
-const Separator = styled.span`
-  margin: 0 0.5rem;
-  color: #d2d2d2;
-`;
-
-// ... (LandingContainer 이하 나머지 스타일은 이전과 동일)
 const LandingContainer = styled.section`
   display: flex;
   flex-direction: column;
@@ -245,13 +200,14 @@ const MapSection = styled.section`
   text-align: center;
   
   h2 {
-    font-size: 2rem;
+    color: #504791; 
+    font-size: 2.5rem; 
     font-weight: bold;
     margin-bottom: 0.5rem;
   }
 
   p {
-    color: #666;
+    color: #FF83B0;
     margin-bottom: 2rem;
     font-size: 1.1rem;
   }
@@ -266,12 +222,4 @@ const MapWrapper = styled.div`
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-`;
-
-const MinimalFooter = styled.footer`
-  width: 100%;
-  padding: 2rem 0;
-  text-align: center;
-  color: #aaa;
-  font-size: 0.9rem;
 `;

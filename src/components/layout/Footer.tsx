@@ -17,7 +17,6 @@ export default Footer;
 const FooterWrapper = styled.footer`
   width: 100%;
   padding: 2rem 0;
-  background-color: #f8f9fa;
   border-top: 1px solid #eee;
   margin-top: 4rem;
 `;

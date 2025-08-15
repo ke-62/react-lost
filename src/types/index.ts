@@ -1,6 +1,3 @@
-// /src/types/index.ts
-// 기획서의 데이터베이스 스키마를 기반으로 프로젝트에서 사용할 공통 타입을 정의합니다.
-
 // 사용자 정보
 export interface User {
   id: number;
@@ -22,12 +19,11 @@ export interface Post {
   item_date: string;
   location_id: number;
   location_detail?: string;
-  status: 'pending' | 'completed'; // 'pending'은 보관중/찾는중을 의미
+  status: 'pending' | 'completed'; 
   created_at: string;
   updated_at: string;
 }
 
-// 장소(건물) 정보
 export interface Location {
   id: number;
   name: string;
@@ -35,14 +31,12 @@ export interface Location {
   longitude: number;
 }
 
-// 채팅방 정보
 export interface ChatRoom {
   id: number;
   post_id: number;
   created_at: string;
 }
 
-// 메시지 정보
 export interface Message {
   id: number;
   chat_id: number;

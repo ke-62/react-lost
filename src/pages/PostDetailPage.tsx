@@ -1,4 +1,3 @@
-// /src/pages/PostDetailPage.tsx
 // 게시글 상세 정보를 보여주는 페이지
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';

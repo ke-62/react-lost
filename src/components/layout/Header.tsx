@@ -38,7 +38,6 @@ export default Header;
 const HeaderWrapper = styled.header`
   width: 100%;
   background: transparent;
-  // border-bottom: 1px solid #f0f0f0;
   padding: 1rem 0;
 `;
 
@@ -70,7 +69,7 @@ const Nav = styled.nav`
 
 const NavLink = styled(Link)`
   text-decoration: none;
-  color: #504791; /* 🎨 피그마 디자인의 보라색으로 직접 지정합니다. */
+  color: #504791;
   font-weight: bold;
   font-size: 0.9rem;
   padding: 0 0.75rem;
