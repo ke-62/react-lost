@@ -4,8 +4,8 @@ import { useUserStore } from '../../store'; // Zustand 스토어 경로 수정 �
 
 // 컴포넌트에서 인증 상태(isLoggedIn)와 사용자 정보(user)를 쉽게 가져오기 위해 사용합니다.
 const useAuth = () => {
-  const { user, isLoggedIn, setUser } = useUserStore();
-  return { user, isLoggedIn, setUser };
+  const { user, isLoggedIn, setUser, logout } = useUserStore();
+  return { user, isLoggedIn, setUser, logout };
 };
 
 export default useAuth;

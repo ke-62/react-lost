@@ -9,6 +9,7 @@ interface UserState {
   user: User | null;
   isLoggedIn: boolean;
   setUser: (user: User | null) => void;
+  logout: () => void;
 }
 
 // 2. create 함수를 immer(...)로 감싸서 타입 안정성을 높입니다.
@@ -23,6 +24,14 @@ export const useUserStore = create(
         // 타입 추론이 더 쉬워지고 안정성이 높아집니다.
         state.user = user;
         state.isLoggedIn = !!user;
+      }),
+
+      logout: () =>
+        set((state) => {
+        state.user = null;
+        state.isLoggedIn = false;
+
+        // 추가적으로 로컬 스토리지 등에 저장된 토큰 삭제 필요
       }),
   }))
 );

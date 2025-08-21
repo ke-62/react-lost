@@ -15,7 +15,7 @@ const CampusMap = () => {
       if (mapContainer.current) {
         const options = {
           center: new window.kakao.maps.LatLng(37.5516, 127.0735), // 세종대학교 중심 좌표
-          level: 2,
+          level: 1,
           zoomable: false,
         };
     

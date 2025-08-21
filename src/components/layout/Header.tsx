@@ -5,7 +5,7 @@ import useAuth from '../hooks/useAuth';
 import Logo from '../../assets/Logo.png';
 
 const Header = () => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, logout } = useAuth();
   const location = useLocation(); 
 
   const textLogoPaths = ['/', '/login', '/signup', '/mypage'];
@@ -30,9 +30,10 @@ const Header = () => {
         <Nav>
           {isLoggedIn ? (
             <>
-              <NavLink to="/chats">쪽지함</NavLink>
-              <Separator>|</Separator>
               <NavLink to="/mypage">마이페이지</NavLink>
+              <Separator>|</Separator>
+              {/* <NavLink to="/mypage">로그아웃</NavLink> */}
+              <LogoutButton onClick={logout}>로그아웃</LogoutButton>
             </>
           ) : (
             <>
@@ -106,4 +107,18 @@ const NavLink = styled(Link)`
 const Separator = styled.span`
   color: #d2d2d2;
   font-size: 0.8rem;
+`;
+const LogoutButton = styled.button`
+  /* NavLink의 스타일을 그대로 복사 */
+  color: #504791;
+  font-weight: bold;
+  font-size: 0.9rem;
+  padding: 0 0.75rem;
+   background: none;
+  border: none;
+  cursor: pointer;
+  
+  &:hover {
+    text-decoration: underline;
+  }
 `;
