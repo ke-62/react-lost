@@ -1,14 +1,54 @@
 // /src/pages/MainPage.tsx
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import CampusMap from '../components/map/CampusMap';
-import logoImage from '../assets/Logo.png'; 
+import logoImage from '../assets/Logo.png';
 import useAuth from '../components/hooks/useAuth';
 import lensIcon from '../assets/lens.png';
 import cameraIcon from '../assets/camera.png';
 import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
+
+interface RecentItem {
+  id: number;
+  title: string;
+  location: string;
+  date: string; 
+  imageUrl?: string;
+}
+
+// 벡앤드 연동 전 임시 아이템들
+const dummyRecentItems: RecentItem[] = [
+  {
+    id: 1,
+    title: '에어팟 프로',
+    location: '학술정보원',
+    date: '2025-08-21', 
+    imageUrl: 'https://airpods~',
+  },
+  {
+    id: 2,
+    title: '학생증',
+    location: '광대토관',
+    date: '2025-08-02', 
+  },
+  {
+    id: 3,
+    title: '검정색 카드지갑',
+    location: '학생회관',
+    date: '2025-07-20', 
+    imageUrl: 'https://wallet~',
+  },
+  {
+    id: 4,
+    title: '아이패드',
+    location: '운동장',
+    date: '2025-06-02',
+    imageUrl: 'https://iPad~',
+  },
+];
+
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -16,6 +56,26 @@ const MainPage = () => {
   
   const [searchTerm, setSearchTerm] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+ //백엔드 API 연동
+  /*
+  const [recentItems, setRecentItems] = useState<RecentItem[]>([]);
+
+  useEffect(() => {
+    // 백엔드에서 최근 습득물 데이터를 가져오는 함수
+    const fetchRecentItems = async () => {
+      try {
+        // const response = await fetch('/api/posts?type=found&limit=10&sort=latest'); // 예시 API
+        // const data = await response.json();
+        // setRecentItems(data.posts);
+      } catch (error) {
+        console.error("최근 습득물 데이터를 불러오는 데 실패했습니다.", error);
+      }
+    };
+
+    fetchRecentItems();
+  }, []);
+  */
 
   const executeSearch = () => {
     if (searchTerm.trim() !== '') {
@@ -93,6 +153,24 @@ const MainPage = () => {
         </MapWrapper>
       </MapSection>
 
+      <RecentItemsSection>
+        <SectionHeader>
+          <h2>최근 습득물</h2>
+          <MoreLink to="/posts?type=found">게시물 더보기 &gt;</MoreLink>
+        </SectionHeader>
+           <ItemsGridContainer>
+              {dummyRecentItems.slice(0, 6).map((item) => (
+                <ItemCard key={item.id} onClick={() => navigate(`/posts/${item.id}`)}>
+                  <ItemImage imageUrl={item.imageUrl} />
+                  <ItemInfoWrapper>
+                    <ItemTitle>{item.title}</ItemTitle>
+                    <ItemMeta>{item.date}</ItemMeta>
+                  </ItemInfoWrapper>
+                </ItemCard>
+              ))}
+            </ItemsGridContainer>
+        </RecentItemsSection>
+
       <Footer/>
     </PageWrapper>
   );
@@ -100,7 +178,6 @@ const MainPage = () => {
 
 export default MainPage;
 
-// --- Styled Components ---
 const PageWrapper = styled.div``;
 
 const LandingContainer = styled.section`
@@ -222,4 +299,86 @@ const MapWrapper = styled.div`
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+`;
+
+const RecentItemsSection = styled.section`
+  padding: 0 2rem 5rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
+const SectionHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.5rem;
+
+  h2 {
+    color: #000000;
+    font-size: 36px;
+    font-weight: 266;
+    margin: 0;
+  }
+`;
+
+const MoreLink = styled(Link)`
+  color: #888; 
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  // align-items: baseline;
+  
+  &:hover {
+    color: #504791;
+  }
+`;
+const ItemsGridContainer = styled.div`
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-start;
+  overflow: hidden;
+`;
+
+const ItemCard = styled.div`
+  flex: 0 0 calc(16.66% - 1rem);
+  max-width: calc(16.66% - 1rem);
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+`;
+
+const ItemImage = styled.div<{ imageUrl?: string }>`
+  width: 100%;
+  height: 180px; 
+  background-color: #f0f0f0;
+  background-image: url(${({ imageUrl }) => imageUrl});
+  background-size: cover;
+  background-position: center;
+`;
+
+const ItemInfoWrapper = styled.div`
+  padding: 1rem;
+
+`;
+
+const ItemTitle = styled.h3`
+  font-size: 18px;
+  font-weight: 500; 
+  color: #000000; 
+  // margin: 0 0 4px 0; /* 아래쪽 여백 4px 추가 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const ItemMeta = styled.p`
+  font-size: 13px; 
+  font-weight: 300;
+  color: rgba(0, 0, 0, 0.3);
+  margin: 0;
 `;

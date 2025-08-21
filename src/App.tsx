@@ -16,19 +16,21 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage'; // SignupPage 임포트
 import ChatListPage from './pages/ChatListPage';
 import ChatRoomPage from './pages/ChatRoomPage';
+import ScrollToTop from './utils/ScrollToTop';
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <BrowserRouter>
+        <ScrollToTop/>
         <Routes>
-          {/* 독립적인 레이아웃을 사용하는 페이지들 */}
           <Route path="/" element={<MainPage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} /> {/* SignupPage 라우터 추가 */}
+          <Route path="/signup" element={<SignupPage />} /> 
 
-          {/* 공통 레이아웃(Header, Footer)을 사용하는 페이지들 */}
+          
+          
           <Route element={<Layout />}>
             <Route path="posts" element={<PostListPage />} />
             <Route path="posts/:id" element={<PostDetailPage />} />
