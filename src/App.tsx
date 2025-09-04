@@ -12,10 +12,10 @@ import PostListPage from './pages/PostListPage';
 import PostDetailPage from './pages/PostDetailPage';
 import PostWritePage from './pages/PostWritePage';
 import MyPage from './pages/MyPage';
-import LoginPage from './pages/LoginPage';
-import SignupPage from './pages/SignupPage'; // SignupPage 임포트
-import ChatListPage from './pages/ChatListPage';
-import ChatRoomPage from './pages/ChatRoomPage';
+// import LoginPage from './pages/LoginPage';
+// import SignupPage from './pages/SignupPage'; // SignupPage 임포트
+// import ChatListPage from './pages/ChatListPage';
+// import ChatRoomPage from './pages/ChatRoomPage';
 import ScrollToTop from './utils/ScrollToTop';
 import PostNewPage from './pages/PostNewPage';
 
@@ -27,11 +27,10 @@ function App() {
         <ScrollToTop/>
         <Routes>
           <Route path="/" element={<MainPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} /> 
           <Route path="/found" element={<PostListPage />} />
           <Route path="/lost" element={<PostWritePage />} />
           <Route path="/write" element={<PostNewPage />} />
+          {/* <Route path="/detail" element={PostDetailPage}/> */}
 
           
           
@@ -40,8 +39,6 @@ function App() {
             <Route path="posts/:id" element={<PostDetailPage />} />
             <Route path="write" element={<PostWritePage />} />
             <Route path="mypage" element={<MyPage />} />
-            <Route path="chats" element={<ChatListPage />} />
-            <Route path="chats/:id" element={<ChatRoomPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

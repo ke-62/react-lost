@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation,useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import useAuth from '../hooks/useAuth';
 import Logo from '../../assets/Logo.png';
@@ -9,6 +9,7 @@ import SignupModal from '../auth/SignupModal';
 const Header = () => {
   const { isLoggedIn, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   // 모달 상태 관리
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -29,8 +30,12 @@ const Header = () => {
     setIsSignupOpen(false);
   };
 
-  const textLogoPaths = ['/']; // login, signup 경로 제거
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
+  const textLogoPaths = ['/']; // login, signup 경로 제거
   const showTextLogo = textLogoPaths.includes(location.pathname);
 
   return (
@@ -53,7 +58,7 @@ const Header = () => {
               <>
                 <NavLink to="/mypage">마이페이지</NavLink>
                 <Separator>|</Separator>
-                <LogoutButton onClick={logout}>로그아웃</LogoutButton>
+                <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
               </>
             ) : (
               <>
@@ -171,3 +176,15 @@ const ModalButton = styled.button`
     text-decoration: underline;
   }
 `;
+
+// const LogoutButton = styled.button`
+//   background: none;
+//   border: none;
+//   color: #333;
+//   cursor: pointer;
+//   font-weight: 500;
+  
+//   &:hover {
+//     color: #5b4cdb;
+//   }
+// `;

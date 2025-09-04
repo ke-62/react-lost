@@ -1,15 +1,14 @@
 // /src/pages/MainPage.tsx
-import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import CampusMap from '../components/map/CampusMap';
 import logoImage from '../assets/Logo.png';
-import useAuth from '../components/hooks/useAuth';
+// import useAuth from '../components/hooks/useAuth';
 import lensIcon from '../assets/lens.png';
 import cameraIcon from '../assets/camera.png';
 import Header from '../components/layout/Header';
-import Footer from '../components/layout/Footer';
-
+import RecentItems from '../components/common/RecentItems';
 interface RecentItem {
   id: number;
   title: string;
@@ -52,10 +51,11 @@ const dummyRecentItems: RecentItem[] = [
 
 const MainPage = () => {
   const navigate = useNavigate();
-  const { isLoggedIn } = useAuth();
+  // const { isLoggedIn } = useAuth();
   
   const [searchTerm, setSearchTerm] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
+
 
  //백엔드 API 연동
   /*
@@ -132,7 +132,7 @@ const MainPage = () => {
         <ButtonWrapper>
           <ShortcutButton
             className="pink"
-            onClick={() => navigate('/found')}  
+            onClick={() => navigate('/found')}  // PostWritePage로 변경 (습득물)
           >
             습득물 바로가기
           </ShortcutButton>
@@ -153,26 +153,24 @@ const MainPage = () => {
         </MapWrapper>
       </MapSection>
 
-      <RecentItemsSection>
-         <SectionHeader>
-          <h2>최근 습득물</h2>
-          <MoreLink to="/found">게시물 더보기 &gt;</MoreLink>  {/* 습득물은 PostWritePage로 */}
-        </SectionHeader>
+      <RecentItems 
+        items={dummyRecentItems}
+        title="최근 습득물"
+        moreLink="/found"
+        moreLinkText="게시물 더보기 >"
+        itemLimit={6}
+      />
 
-           <ItemsGridContainer>
-              {dummyRecentItems.slice(0, 6).map((item) => (
-                <ItemCard key={item.id} onClick={() => navigate(`/posts/${item.id}`)}>
-                  <ItemImage imageUrl={item.imageUrl} />
-                  <ItemInfoWrapper>
-                    <ItemTitle>{item.title}</ItemTitle>
-                    <ItemMeta>{item.date}</ItemMeta>
-                  </ItemInfoWrapper>
-                </ItemCard>
-              ))}
-            </ItemsGridContainer>
-        </RecentItemsSection>
-
-      <Footer/>
+      <FooterSection>
+        <FooterContent>
+          <HeaderText>Who Made This</HeaderText>
+          <FooterLogo src={logoImage} alt="세만추 로고" />
+          <ServiceTitle>세만추 : 세종대 유실물 포털</ServiceTitle>
+          <ServiceDescription>
+            세종대에서 잃어버린 물건과의 만남을 이곳에서 추구하고자 제작된 서비스입니다.
+          </ServiceDescription>
+        </FooterContent>
+      </FooterSection>
     </PageWrapper>
   );
 };
@@ -302,84 +300,48 @@ const MapWrapper = styled.div`
   box-shadow: 0 8px 24px rgba(0,0,0,0.1);
 `;
 
-const RecentItemsSection = styled.section`
-  padding: 0 2rem 5rem 2rem;
+const FooterSection = styled.section`
+  width: 100%;
+  background: transparent;
+  padding: 4rem 0 6rem 0;
+  margin-top: 4rem;
+`;
+
+const FooterContent = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-`;
-
-const SectionHeader = styled.div`
+  padding: 0 2rem;
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 0.5rem;
-
-  h2 {
-    color: #000000;
-    font-size: 36px;
-    font-weight: 266;
-    margin: 0;
-  }
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
 `;
 
-const MoreLink = styled(Link)`
-  color: #888; 
-  text-decoration: none;
-  font-size: 16px;
+const HeaderText = styled.h2`
+  color: #504791;
+  font-size: 32px;
   font-weight: 500;
-  // align-items: baseline;
-  
-  &:hover {
-    color: #504791;
-  }
-`;
-const ItemsGridContainer = styled.div`
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-start;
-  overflow: hidden;
-`;
-
-const ItemCard = styled.div`
-  flex: 0 0 calc(16.66% - 1rem);
-  max-width: calc(16.66% - 1rem);
-  border-radius: 16px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-
-  &:hover {
-    transform: translateY(-5px);
-  }
-`;
-
-const ItemImage = styled.div<{ imageUrl?: string }>`
-  width: 100%;
-  height: 180px; 
-  background-color: #f0f0f0;
-  background-image: url(${({ imageUrl }) => imageUrl});
-  background-size: cover;
-  background-position: center;
-`;
-
-const ItemInfoWrapper = styled.div`
-  padding: 1rem;
-
-`;
-
-const ItemTitle = styled.h3`
-  font-size: 18px;
-  font-weight: 500; 
-  color: #000000; 
-  // margin: 0 0 4px 0; /* 아래쪽 여백 4px 추가 */
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`;
-
-const ItemMeta = styled.p`
-  font-size: 13px; 
-  font-weight: 300;
-  color: rgba(0, 0, 0, 0.3);
   margin: 0;
+`;
+
+const FooterLogo = styled.img`
+  width: 300px;
+  height: auto;
+  margin: 1rem 0;
+`;
+
+const ServiceTitle = styled.h3`
+  color: #504791;
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0;
+  margin-top: 1rem;
+`;
+
+const ServiceDescription = styled.p`
+  color: #504791;
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0;
+  max-width: 600px;
 `;
