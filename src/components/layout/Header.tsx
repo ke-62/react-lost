@@ -1,50 +1,84 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import useAuth from '../hooks/useAuth';
 import Logo from '../../assets/Logo.png';
+import LoginModal from '../auth/LoginModal';
+import SignupModal from '../auth/SignupModal';
 
 const Header = () => {
   const { isLoggedIn, logout } = useAuth();
-  const location = useLocation(); 
+  const location = useLocation();
 
-  const textLogoPaths = ['/', '/login', '/signup', '/mypage'];
+  // 모달 상태 관리
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isSignupOpen, setIsSignupOpen] = useState(false);
+
+  const openLogin = () => {
+    setIsLoginOpen(true);
+    setIsSignupOpen(false);
+  };
+
+  const openSignup = () => {
+    setIsSignupOpen(true);
+    setIsLoginOpen(false);
+  };
+
+  const closeAll = () => {
+    setIsLoginOpen(false);
+    setIsSignupOpen(false);
+  };
+
+  const textLogoPaths = ['/', '/mypage']; // login, signup 경로 제거
 
   const showTextLogo = textLogoPaths.includes(location.pathname);
 
   return (
-    <HeaderWrapper>
-      <HeaderContent>
-        {showTextLogo ? (
-
-          <PlaceholderLogo>
-            <Link to="/">Who Made This</Link>
-          </PlaceholderLogo>
-        ) : (
-          <ImageLogo>
-            <Link to="/">
-              <img src={Logo} alt="세만추 로고" />
-            </Link>
-          </ImageLogo>
-        )}
-        <Nav>
-          {isLoggedIn ? (
-            <>
-              <NavLink to="/mypage">마이페이지</NavLink>
-              <Separator>|</Separator>
-              {/* <NavLink to="/mypage">로그아웃</NavLink> */}
-              <LogoutButton onClick={logout}>로그아웃</LogoutButton>
-            </>
+    <>
+      <HeaderWrapper>
+        <HeaderContent>
+          {showTextLogo ? (
+            <PlaceholderLogo>
+              <Link to="/">Who Made This</Link>
+            </PlaceholderLogo>
           ) : (
-            <>
-              <NavLink to="/signup">회원가입</NavLink>
-              <Separator>|</Separator>
-              <NavLink to="/login">로그인</NavLink>
-            </>
+            <ImageLogo>
+              <Link to="/">
+                <img src={Logo} alt="세만추 로고" />
+              </Link>
+            </ImageLogo>
           )}
-        </Nav>
-      </HeaderContent>
-    </HeaderWrapper>
+          <Nav>
+            {isLoggedIn ? (
+              <>
+                <NavLink to="/mypage">마이페이지</NavLink>
+                <Separator>|</Separator>
+                <LogoutButton onClick={logout}>로그아웃</LogoutButton>
+              </>
+            ) : (
+              <>
+                <ModalButton onClick={openSignup}>회원가입</ModalButton>
+                <Separator>|</Separator>
+                <ModalButton onClick={openLogin}>로그인</ModalButton>
+              </>
+            )}
+          </Nav>
+        </HeaderContent>
+      </HeaderWrapper>
+
+      {/* 모달들 */}
+      <LoginModal
+        isOpen={isLoginOpen}
+        onClose={closeAll}
+        onSwitchToSignup={openSignup}
+      />
+      
+      <SignupModal
+        isOpen={isSignupOpen}
+        onClose={closeAll}
+        onSwitchToLogin={openLogin}
+      />
+    </>
   );
 };
 
@@ -83,7 +117,7 @@ const ImageLogo = styled.div`
     align-items: center;
   }
   img {
-    height: 40px; // 로고 이미지 높이 조절
+    height: 40px;
   }
 `;
 
@@ -108,16 +142,31 @@ const Separator = styled.span`
   color: #d2d2d2;
   font-size: 0.8rem;
 `;
+
 const LogoutButton = styled.button`
-  /* NavLink의 스타일을 그대로 복사 */
   color: #504791;
   font-weight: bold;
   font-size: 0.9rem;
   padding: 0 0.75rem;
-   background: none;
+  background: none;
   border: none;
   cursor: pointer;
   
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const ModalButton = styled.button`
+  text-decoration: none;
+  color: #504791;
+  font-weight: bold;
+  font-size: 0.9rem;
+  padding: 0 0.75rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+
   &:hover {
     text-decoration: underline;
   }
