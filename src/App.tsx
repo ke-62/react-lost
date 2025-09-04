@@ -17,6 +17,7 @@ import SignupPage from './pages/SignupPage'; // SignupPage 임포트
 import ChatListPage from './pages/ChatListPage';
 import ChatRoomPage from './pages/ChatRoomPage';
 import ScrollToTop from './utils/ScrollToTop';
+import PostNewPage from './pages/PostNewPage';
 
 function App() {
   return (
@@ -28,6 +29,9 @@ function App() {
           <Route path="/" element={<MainPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} /> 
+          <Route path="/found" element={<PostListPage />} />
+          <Route path="/lost" element={<PostWritePage />} />
+          <Route path="/write" element={<PostNewPage />} />
 
           
           

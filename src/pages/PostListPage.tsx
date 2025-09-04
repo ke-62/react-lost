@@ -1,47 +1,374 @@
-// 분실물/습득물 게시글 목록을 보여주는 페이지
 import React, { useState, useEffect } from 'react';
-import { getPosts } from '../api/postApi';
-import { Post } from '../types';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+
+interface Post {
+  id: number;
+  title: string;
+  acquisitionDate: string;
+  acquisitionLocation: string;
+  itemCategory: string;
+  itemStatus: string;
+}
+
+// 임시 데이터 (20개씩 페이지 분할)
+const allPosts: Post[] = Array.from({ length: 100 }, (_, i) => ({
+  id: 100 - i,
+  title: '광토 유캔두잇에서 지갑 주움',
+  acquisitionDate: '25.08.14',
+  acquisitionLocation: '광개토관',
+  itemCategory: '지갑',
+  itemStatus: '보관중'
+}));
+
+const POSTS_PER_PAGE = 20;
 
 const PostListPage = () => {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [type, setType] = useState<'lost' | 'found'>('lost');
+  const navigate = useNavigate();
+  const [type, setType] = useState<'lost' | 'found'>('found');
+  const [currentPage, setCurrentPage] = useState(1);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        // 페이지네이션(20개씩) 및 타입 필터링 적용
-        const res = await getPosts({ page: 1, limit: 20, type, status: 'pending' });
-        setPosts(res.data);
-      } catch (error) {
-        console.error("게시글을 불러오는데 실패했습니다.", error);
-      }
-    };
-    fetchPosts();
-  }, [type]);
+  const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
+  const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+  const currentPosts = allPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
+
+  const handlePostClick = (postId: number) => {
+    navigate(`/posts/${postId}`);
+  };
+
+  const handleWriteClick = () => {
+    navigate('/write'); // PostNewPage로 이동
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const getVisiblePages = () => {
+    const maxVisible = 5;
+    const start = Math.max(1, currentPage - 2);
+    const end = Math.min(totalPages, start + maxVisible - 1);
+    
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  };
 
   return (
-    <div>
-      <div>
-        <button onClick={() => setType('lost')}>분실물</button>
-        <button onClick={() => setType('found')}>습득물</button>
-      </div>
-      <h1>{type === 'lost' ? '분실물' : '습득물'} 목록</h1>
-      <div>
-        {posts.length > 0 ? (
-          posts.map((post) => (
-            <div key={post.id} style={{ border: '1px solid #ccc', margin: '1rem', padding: '1rem' }}>
-              <h3>{post.title}</h3>
-              <p>상세 위치: {post.location_detail}</p>
-              <p>상태: {post.status === 'pending' ? '찾는 중/보관 중' : '전달 완료'} [cite: 85]</p>
-            </div>
-          ))
-        ) : (
-          <p>등록된 게시글이 없습니다.</p>
-        )}
-      </div>
-    </div>
+    <PageWrapper>
+      <Header>
+        <Title>세간주</Title>
+        <LoginButton onClick={() => navigate('/mypage')}>마이페이지</LoginButton>
+      </Header>
+
+      <SearchContainer>
+        <SearchInputWrapper>
+          <SearchInput placeholder="게시물을 검색하세요" />
+          <SearchIcon>🔍</SearchIcon>
+        </SearchInputWrapper>
+      </SearchContainer>
+
+      <ButtonGroup>
+        <TabButton 
+          $active={type === 'lost'} 
+          onClick={() => setType('lost')}
+        >
+          분실물
+        </TabButton>
+        <TabButton 
+          $active={type === 'found'} 
+          onClick={() => setType('found')}
+        >
+          습득물
+        </TabButton>
+        <EveryTimeButton>에브리타임</EveryTimeButton>
+      </ButtonGroup>
+
+      <PostContainer>
+        <TableContainer>
+          <TableHeader>
+            <HeaderCell style={{ width: '8%' }}>NO.</HeaderCell>
+            <HeaderCell style={{ width: '35%' }}>제목</HeaderCell>
+            <HeaderCell style={{ width: '15%' }}>습득일</HeaderCell>
+            <HeaderCell style={{ width: '15%' }}>습득장소</HeaderCell>
+            <HeaderCell style={{ width: '12%' }}>물품분류</HeaderCell>
+            <HeaderCell style={{ width: '15%' }}>물품상태</HeaderCell>
+          </TableHeader>
+          
+          {currentPosts.map((post) => (
+            <PostRow key={post.id} onClick={() => handlePostClick(post.id)}>
+              <RowCell style={{ width: '8%' }}>{post.id}</RowCell>
+              <TitleCell style={{ width: '35%' }}>{post.title}</TitleCell>
+              <RowCell style={{ width: '15%' }}>{post.acquisitionDate}</RowCell>
+              <RowCell style={{ width: '15%' }}>{post.acquisitionLocation}</RowCell>
+              <RowCell style={{ width: '12%' }}>{post.itemCategory}</RowCell>
+              <RowCell style={{ width: '15%' }}>{post.itemStatus}</RowCell>
+            </PostRow>
+          ))}
+        </TableContainer>
+
+        <PaginationContainer>
+          <Pagination>
+            <PageButton 
+              onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+              disabled={currentPage === 1}
+            >
+              ‹
+            </PageButton>
+            
+            {getVisiblePages().map((pageNum) => (
+              <PageNumber 
+                key={pageNum}
+                $active={pageNum === currentPage}
+                onClick={() => handlePageChange(pageNum)}
+              >
+                {pageNum}
+              </PageNumber>
+            ))}
+            
+            <PageButton 
+              onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+              disabled={currentPage === totalPages}
+            >
+              ›
+            </PageButton>
+          </Pagination>
+          
+          <WriteButton onClick={handleWriteClick}>
+            글쓰기
+          </WriteButton>
+        </PaginationContainer>
+      </PostContainer>
+    </PageWrapper>
   );
 };
 
 export default PostListPage;
+
+const PageWrapper = styled.div`
+  background-color: transparent; /* f5f5f5에서 transparent로 변경 */
+  min-height: 100vh;
+  padding: 1.5rem;
+`;
+
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 0 1rem;
+`;
+
+const Title = styled.h1`
+  color: #5b4cdb;
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0;
+`;
+
+const LoginButton = styled.button`
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 0.9rem;
+  cursor: pointer;
+  
+  &:hover {
+    color: #333;
+  }
+`;
+
+const SearchContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+`;
+
+const SearchInputWrapper = styled.div`
+  position: relative;
+  width: 500px;
+`;
+
+const SearchInput = styled.input`
+  width: 100%;
+  padding: 0.75rem 3rem 0.75rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  outline: none;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+  
+  &:focus {
+    border-color: #5b4cdb;
+  }
+`;
+
+const SearchIcon = styled.div`
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 1rem;
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+`;
+
+const TabButton = styled.button<{ $active: boolean }>`
+  padding: 0.75rem 2rem;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  background: ${({ $active }) => ($active ? '#5b4cdb' : 'white')};
+  color: ${({ $active }) => ($active ? 'white' : '#666')};
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  
+  &:hover {
+    background: ${({ $active }) => ($active ? '#4a3eb8' : '#f5f5f5')};
+  }
+`;
+
+const EveryTimeButton = styled.button`
+  padding: 0.75rem 2rem;
+  border: 1px solid #ddd;
+  border-radius: 25px;
+  background: white;
+  color: #666;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  
+  &:hover {
+    background: #f5f5f5;
+  }
+`;
+
+const PostContainer = styled.div`
+  background: white;
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  max-width: 1200px;
+  margin: 0 auto;
+  overflow: hidden;
+`;
+
+const TableContainer = styled.div`
+  width: 100%;
+`;
+
+const TableHeader = styled.div`
+  display: flex;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  padding: 1rem 0;
+  font-weight: 600;
+  color: #495057;
+`;
+
+const HeaderCell = styled.div`
+  text-align: center;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const PostRow = styled.div`
+  display: flex;
+  padding: 1rem 0;
+  border-bottom: 1px solid #f1f3f4;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  
+  &:hover {
+    background-color: #f8f9ff;
+  }
+  
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+
+const RowCell = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  color: #666;
+  text-align: center;
+`;
+
+const TitleCell = styled(RowCell)`
+  justify-content: flex-start;
+  padding-left: 1rem;
+  color: #5b4cdb;
+  font-weight: 500;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+
+const PaginationContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  background: #fafbfc;
+  border-top: 1px solid #e9ecef;
+`;
+
+const Pagination = styled.div`
+  display: flex;
+  gap: 0.25rem;
+  flex: 1;
+  justify-content: center;
+`;
+
+const PageButton = styled.button<{ disabled?: boolean }>`
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
+  border-radius: 4px;
+  opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
+  
+  &:hover:not(:disabled) {
+    background: #f5f5f5;
+  }
+`;
+
+const PageNumber = styled.button<{ $active?: boolean }>`
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ddd;
+  background: ${({ $active }) => ($active ? '#5b4cdb' : 'white')};
+  color: ${({ $active }) => ($active ? 'white' : '#666')};
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  min-width: 36px;
+  
+  &:hover {
+    background: ${({ $active }) => ($active ? '#4a3eb8' : '#f5f5f5')};
+  }
+`;
+
+const WriteButton = styled.button`
+  padding: 0.75rem 1.5rem;
+  background: #5b4cdb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  
+  &:hover {
+    background: #4a3eb8;
+  }
+`;

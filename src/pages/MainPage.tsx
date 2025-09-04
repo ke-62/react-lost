@@ -132,13 +132,13 @@ const MainPage = () => {
         <ButtonWrapper>
           <ShortcutButton
             className="pink"
-            onClick={() => navigate('/posts?type=found')}
+            onClick={() => navigate('/found')}  
           >
             습득물 바로가기
           </ShortcutButton>
           <ShortcutButton
             className="dark"
-            onClick={() => navigate('/posts?type=lost')}
+            onClick={() => navigate('/lost')}   // PostListPage로 변경 (분실물)
           >
             분실물 바로가기
           </ShortcutButton>
@@ -154,10 +154,11 @@ const MainPage = () => {
       </MapSection>
 
       <RecentItemsSection>
-        <SectionHeader>
+         <SectionHeader>
           <h2>최근 습득물</h2>
-          <MoreLink to="/posts?type=found">게시물 더보기 &gt;</MoreLink>
+          <MoreLink to="/found">게시물 더보기 &gt;</MoreLink>  {/* 습득물은 PostWritePage로 */}
         </SectionHeader>
+
            <ItemsGridContainer>
               {dummyRecentItems.slice(0, 6).map((item) => (
                 <ItemCard key={item.id} onClick={() => navigate(`/posts/${item.id}`)}>

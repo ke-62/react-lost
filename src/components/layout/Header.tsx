@@ -29,7 +29,7 @@ const Header = () => {
     setIsSignupOpen(false);
   };
 
-  const textLogoPaths = ['/', '/mypage']; // login, signup 경로 제거
+  const textLogoPaths = ['/']; // login, signup 경로 제거
 
   const showTextLogo = textLogoPaths.includes(location.pathname);
 
