@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation,useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import useAuth from '../hooks/useAuth';
 import Logo from '../../assets/Logo.png';
@@ -14,6 +14,7 @@ const Header = () => {
   // 모달 상태 관리
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
+  const [isTeamModalOpen, setIsTeamModalOpen] = useState(false);
 
   const openLogin = () => {
     setIsLoginOpen(true);
@@ -28,6 +29,7 @@ const Header = () => {
   const closeAll = () => {
     setIsLoginOpen(false);
     setIsSignupOpen(false);
+    setIsTeamModalOpen(false);
   };
 
   const handleLogout = () => {
@@ -43,8 +45,8 @@ const Header = () => {
       <HeaderWrapper>
         <HeaderContent>
           {showTextLogo ? (
-            <PlaceholderLogo>
-              <Link to="/">Who Made This</Link>
+            <PlaceholderLogo onClick={() => setIsTeamModalOpen(true)}>
+              Who Made This
             </PlaceholderLogo>
           ) : (
             <ImageLogo>
@@ -77,12 +79,39 @@ const Header = () => {
         onClose={closeAll}
         onSwitchToSignup={openSignup}
       />
-      
+
       <SignupModal
         isOpen={isSignupOpen}
         onClose={closeAll}
         onSwitchToLogin={openLogin}
       />
+
+      {/* 팀 소개 모달 */}
+      {isTeamModalOpen && (
+        <TeamModalOverlay onClick={closeAll}>
+          <TeamModalContent onClick={(e) => e.stopPropagation()}>
+            <CloseButton onClick={closeAll}>×</CloseButton>
+            <TeamGrid>
+              <TeamRow>
+                <TeamRole>BACKEND</TeamRole>
+                <TeamMember>권부성</TeamMember>
+              </TeamRow>
+              <TeamRow>
+                <TeamRole>FRONTEND</TeamRole>
+                <TeamMember>이고은</TeamMember>
+              </TeamRow>
+              <TeamRow>
+                <TeamRole>AI</TeamRole>
+                <TeamMember>최희두</TeamMember>
+              </TeamRow>
+              <TeamRow>
+                <TeamRole>DESIGN</TeamRole>
+                <TeamMember>박서현</TeamMember>
+              </TeamRow>
+            </TeamGrid>
+          </TeamModalContent>
+        </TeamModalOverlay>
+      )}
     </>
   );
 };
@@ -106,13 +135,13 @@ const HeaderContent = styled.div`
 
 const PlaceholderLogo = styled.div`
   font-weight: bold;
-  color: #a0a0a0;
+  color: #504791;
   opacity: 0.7;
   font-size: 0.9rem;
+  cursor: pointer;
 
-  a {
-    text-decoration: none;
-    color: inherit;
+  &:hover {
+    opacity: 1;
   }
 `;
 
@@ -177,14 +206,67 @@ const ModalButton = styled.button`
   }
 `;
 
-// const LogoutButton = styled.button`
-//   background: none;
-//   border: none;
-//   color: #333;
-//   cursor: pointer;
-//   font-weight: 500;
+const TeamModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+`;
+
+const TeamModalContent = styled.div`
+  background: #E8E3F3;
+  padding: 3rem;
+  border-radius: 16px;
+  position: relative;
+  min-width: 400px;
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #504791;
+  cursor: pointer;
+  line-height: 1;
   
-//   &:hover {
-//     color: #5b4cdb;
-//   }
-// `;
+  &:hover {
+    opacity: 0.7;
+  }
+`;
+
+const TeamGrid = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+`;
+
+const TeamRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const TeamRole = styled.div`
+  color: #504791;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: left;
+  flex: 1;
+`;
+
+const TeamMember = styled.div`
+  color: #504791;
+  font-size: 1.1rem;
+  font-weight: 400;
+  text-align: right;
+  flex: 1;
+`;

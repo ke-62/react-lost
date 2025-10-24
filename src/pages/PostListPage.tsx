@@ -14,15 +14,62 @@ interface Post {
   itemStatus: string;
 }
 
-// 임시 데이터 (20개씩 페이지 분할) - 다양한 데이터로 수정
-const allPosts: Post[] = Array.from({ length: 100 }, (_, i) => ({
-  id: 100 - i,
+// 특별한 게시물들 (96-100번)
+const specialPosts: Post[] = [
+  {
+    id: 96,
+    title: '대양ai 투썸에서 검정색 카드지갑 주움',
+    acquisitionDate: '25.08.14',
+    acquisitionLocation: '대양ai',
+    itemCategory: '지갑',
+    itemStatus: '보관중'
+  },
+  {
+    id: 97,
+    title: '대양 ai 지하 1층 엘리베이터 앞에서 아이패드 주움',
+    acquisitionDate: '25.08.14',
+    acquisitionLocation: '대양ai',
+    itemCategory: '전자기기',
+    itemStatus: '보관중'
+  },
+  {
+    id: 98,
+    title: '광개토관 206호에서 학생증 발견',
+    acquisitionDate: '25.08.14',
+    acquisitionLocation: '광개토관',
+    itemCategory: '신분증',
+    itemStatus: '보관중'
+  },
+  {
+    id: 99,
+    title: '학술정보원 4층 열람실에서 에어팟 프로 발견',
+    acquisitionDate: '25.08.14',
+    acquisitionLocation: '학술정보원',
+    itemCategory: '전자기기',
+    itemStatus: '보관중'
+  },
+  {
+    id: 100,
+    title: '학술정보원 3층 남자화장실에 아이폰 14 있음',
+    acquisitionDate: '25.08.14',
+    acquisitionLocation: '학술정보원',
+    itemCategory: '전자기기',
+    itemStatus: '보관중'
+  }
+];
+
+const combinedPosts = Array.from({ length: 95 }, (_, i) => ({
+  id: 95 - i,
   title: i % 3 === 0 ? '광토 유캔두잇에서 지갑 주움' : i % 3 === 1 ? '광개토관에서 에어팟 발견' : '도서관에서 핸드폰 주움',
   acquisitionDate: '25.08.14',
   acquisitionLocation: i % 3 === 0 ? '광개토관' : i % 3 === 1 ? '광개토관' : '도서관',
   itemCategory: i % 3 === 0 ? '지갑' : i % 3 === 1 ? '전자기기' : '전자기기',
-  itemStatus: '보관중'
+  itemStatus: '완료'
 }));
+
+// 전체 게시물 배열 (특별 게시물 + 일반 게시물을 ID 순으로 정렬)
+const allPosts: Post[] = [...specialPosts, ...combinedPosts].sort((a, b) => b.id - a.id);
+
 
 const POSTS_PER_PAGE = 20;
 
@@ -91,11 +138,11 @@ const PostListPage = () => {
     const maxVisible = 5;
     const start = Math.max(1, currentPage - 2);
     const end = Math.min(totalPages, start + maxVisible - 1);
-    
+
     return Array.from({ length: end - start + 1 }, (_, i) => start + i);
   };
 
-    return (
+  return (
     <PageWrapper>
       <Header />
 
@@ -115,25 +162,25 @@ const PostListPage = () => {
             <img src={cameraIcon} alt="이미지 검색" />
           </SearchIcon>
         </SearchWrapper>
-        <input 
-          type="file" 
-          accept="image/*" 
-          ref={fileInputRef} 
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
           onChange={handleFileChange}
-          style={{ display: 'none' }} 
+          style={{ display: 'none' }}
         />
 
       </SearchContainer>
 
-       <ButtonGroup>
-        <TabButton 
-          $active={type === 'lost'} 
+      <ButtonGroup>
+        <TabButton
+          $active={type === 'lost'}
           onClick={() => navigate('/lost')}
         >
           분실물
         </TabButton>
-        <TabButton 
-          $active={type === 'found'} 
+        <TabButton
+          $active={type === 'found'}
           onClick={() => navigate('/found')}
         >
           습득물
@@ -150,7 +197,7 @@ const PostListPage = () => {
             <HeaderCell style={{ width: '12%' }}>물품분류</HeaderCell>
             <HeaderCell style={{ width: '15%' }}>물품상태</HeaderCell>
           </TableHeader>
-          
+
           {currentPosts.length > 0 ? (
             currentPosts.map((post) => (
               <PostRow key={post.id} onClick={() => handlePostClick(post.id)}>
@@ -172,15 +219,15 @@ const PostListPage = () => {
         {filteredPosts.length > 0 && (
           <PaginationContainer>
             <Pagination>
-              <PageButton 
+              <PageButton
                 onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
                 disabled={currentPage === 1}
               >
                 ‹
               </PageButton>
-              
+
               {getVisiblePages().map((pageNum) => (
-                <PageNumber 
+                <PageNumber
                   key={pageNum}
                   $active={pageNum === currentPage}
                   onClick={() => handlePageChange(pageNum)}
@@ -188,15 +235,15 @@ const PostListPage = () => {
                   {pageNum}
                 </PageNumber>
               ))}
-              
-              <PageButton 
+
+              <PageButton
                 onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
                 disabled={currentPage === totalPages}
               >
                 ›
               </PageButton>
             </Pagination>
-            
+
             <WriteButton onClick={handleWriteClick}>
               글쓰기
             </WriteButton>

@@ -18,13 +18,14 @@ import MyPage from './pages/MyPage';
 // import ChatRoomPage from './pages/ChatRoomPage';
 import ScrollToTop from './utils/ScrollToTop';
 import PostNewPage from './pages/PostNewPage';
+import LostDetailPage from './pages/LostDetailPage';
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <BrowserRouter>
-        <ScrollToTop/>
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/found" element={<PostListPage />} />
@@ -32,8 +33,9 @@ function App() {
           <Route path="/write" element={<PostNewPage />} />
           {/* <Route path="/detail" element={PostDetailPage}/> */}
 
-          
-          
+          <Route path="/posts/:id" element={<PostDetailPage />} /> {/* 습득물 상세 */}
+          <Route path="/lost/:id" element={<LostDetailPage />} /> {/* 분실물 상세 - 추가 */}
+
           <Route element={<Layout />}>
             <Route path="posts" element={<PostListPage />} />
             <Route path="posts/:id" element={<PostDetailPage />} />

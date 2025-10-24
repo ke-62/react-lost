@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
 interface ChatUser {
@@ -7,6 +7,8 @@ interface ChatUser {
   name: string;
   lastMessage: string;
   lastMessageTime: string;
+  postId?: number;
+  postTitle?: string;
 }
 
 interface ChatMessage {
@@ -20,7 +22,7 @@ interface MyPost {
   id: number;
   title: string;
   date: string;
-  type: 'found' | 'lost'; // 습득신고 or 분실신고
+  type: string;
 }
 
 // 채팅 메시지 데이터 타입 정의
@@ -28,41 +30,61 @@ interface ChatMessagesData {
   [key: number]: ChatMessage[];
 }
 
-// 임시 쪽지 사용자 데이터
+// 임시 쪽지 사용자 데이터 (id 3 제거)
 const dummyChatUsers: ChatUser[] = [
   { id: 1, name: '익명0100', lastMessage: '안녕하세요, 물건 찾으셨나요?', lastMessageTime: '7시간 전' },
   { id: 2, name: '익명0100', lastMessage: '네, 습득하신 물건이 제 것 같아요!', lastMessageTime: '7시간 전' },
-  { id: 3, name: '익명0100', lastMessage: '연락 감사합니다.', lastMessageTime: '7시간 전' },
 ];
 
 // 임시 내가 쓴 글 데이터
 const dummyMyPosts: MyPost[] = [
-  { id: 1, title: '광토 유캔두잇에서 지갑 주움', date: '25.08.14', type: 'found' },
-  { id: 2, title: '광토 유캔두잇에서 지갑 주움', date: '25.08.14', type: 'found' },
-  { id: 3, title: '광토 유캔두잇에서 지갑 주움', date: '25.08.14', type: 'found' },
+  { id: 1, title: '광개토관에서 에어팟 발견', date: '25.08.14', type: 'found' },
 ];
 
 // 임시 대화 내용 데이터
 const dummyChatMessages: ChatMessagesData = {
   1: [
-    { id: 1, senderId: 1, text: '안녕하세요. 혹시 학생증 찾으셨나요?', time: '10:25 AM' },
-    { id: 2, senderId: 99, text: '네, 제가 가지고 있습니다. 어디서 잃어버리셨나요?', time: '10:28 AM' },
-    { id: 3, senderId: 1, text: '광대토관에서 잃어버린 것 같아요. 혹시 전달해주실 수 있을까요?', time: '10:30 AM' },
-    { id: 4, senderId: 99, text: '네, 가능합니다. 학술정보원 앞에서 만날 수 있을까요?', time: '10:32 AM' },
+    { id: 1, senderId: 1, text: '안녕하세요. 혹시 에어팟 프로2 버젼 맞을까요?', time: '10:25 AM' },
+    { id: 2, senderId: 99, text: '네, 맞습니다. 무슨색 케이스일까요?', time: '10:28 AM' },
+    { id: 3, senderId: 1, text: ' 연두색 케이스입니다.', time: '10:30 AM' },
+    { id: 4, senderId: 99, text: '네, 맞습니다. 오늘 학술정보원 앞에서 만날 수 있을까요?', time: '10:32 AM' },
+    { id: 5, senderId: 1, text: '네, 감사합니다! 한 10분 내로 도착합니다!', time: '10:35 AM' },
   ],
   2: [
-    { id: 1, senderId: 2, text: '안녕하세요. 에어팟 프로 찾으셨다고 해서 연락드렸어요.', time: 'Yesterday' },
-    { id: 2, senderId: 99, text: '네, 맞습니다. 혹시 어떤 색깔이신가요?', time: 'Yesterday' },
+    { id: 1, senderId: 99, text: '안녕하세요. 찾으셨다는 지갑 검정색 반지갑에 김세종 학생증 있는거 맞을까요??', time: 'Yesterday' },
+    { id: 2, senderId: 2, text: '네, 맞습니다! ', time: 'Yesterday' },
+    { id: 3, senderId: 99, text: '감사합니다! 오늘 학술정보원 앞에서 만날 수 있을까요?', time: 'Yesterday' },
+    { id: 4, senderId: 2, text: '네, 알겠습니다. 바로 갈게요!', time: 'Yesterday' },
   ]
 };
 
 const MyPage = () => {
   const navigate = useNavigate();
-  
+  const location = useLocation();
+
   const [selectedUser, setSelectedUser] = useState<ChatUser | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [myPosts, setMyPosts] = useState<MyPost[]>(dummyMyPosts);
+  const [chatUsers, setChatUsers] = useState<ChatUser[]>(dummyChatUsers);
+
+  useEffect(() => {
+
+
+    const storedChats = JSON.parse(localStorage.getItem('chatUsers') || '[]');
+    const mergedChats = [...dummyChatUsers, ...storedChats];
+    setChatUsers(mergedChats);
+
+    // navigate로 전달된 selectedUserId가 있으면 해당 사용자 선택
+    if (location.state?.selectedUserId) {
+      const userToSelect = mergedChats.find(u => u.id === location.state.selectedUserId);
+      if (userToSelect) {
+        setSelectedUser(userToSelect);
+      }
+      // state 초기화
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state]);
 
   useEffect(() => {
     if (selectedUser) {
@@ -73,7 +95,7 @@ const MyPage = () => {
   const handleUserClick = (user: ChatUser) => {
     setSelectedUser(user);
   };
-  
+
   const handleSendMessage = () => {
     if (newMessage.trim() === '' || !selectedUser) return;
     const newMsg: ChatMessage = {
@@ -86,38 +108,44 @@ const MyPage = () => {
     setNewMessage('');
   };
 
-  // 회원탈퇴 처리
   const handleWithdraw = () => {
     const confirmed = window.confirm('정말로 회원탈퇴를 하시겠습니까? 이 작업은 되돌릴 수 없습니다.');
-    
-    if (confirmed) {
-      // 백엔드 API 호출
-      // try {
-      //   await fetch('/api/users/withdraw', {
-      //     method: 'DELETE',
-      //     headers: {
-      //       'Authorization': `Bearer ${localStorage.getItem('token')}`,
-      //       'Content-Type': 'application/json',
-      //     },
-      //   });
-      // } catch (error) {
-      //   console.error('회원탈퇴 중 오류 발생:', error);
-      //   alert('회원탈퇴 중 오류가 발생했습니다. 다시 시도해주세요.');
-      //   return;
-      // }
 
-      // 로컬 스토리지 정리
+    if (confirmed) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      
+      localStorage.clear();
+
       alert('회원탈퇴가 완료되었습니다.');
-      navigate('/');
+      navigate('/', { replace: true });
+      window.location.reload();
     }
   };
 
-  // 내가 쓴 글 클릭 시 해당 게시물로 이동
   const handlePostClick = (postId: number) => {
     navigate(`/posts/${postId}`);
+  };
+
+  // 게시물 제목 가져오기 함수
+  const getPostTitle = (userId: number) => {
+    const user = chatUsers.find(u => u.id === userId);
+    if (user?.postTitle) {
+      return user.postTitle;
+    }
+
+    // postId가 있으면 posts에서 찾기
+    if (user?.postId) {
+      const posts = JSON.parse(localStorage.getItem('posts') || '[]');
+      const post = posts.find((p: any) => p.id === user.postId);
+      if (post) return post.title;
+    }
+
+    // 기본 더미 데이터에 대한 제목
+    const dummyTitles: { [key: number]: string } = {
+      1: '광개토관에서 에어팟 발견',
+      2: '학습정보관 4층 열람실에서 검정색 지갑 발견'
+    };
+    return dummyTitles[userId] || null;
   };
 
   return (
@@ -129,11 +157,10 @@ const MyPage = () => {
             <ProfileContent>
               <ProfileImage />
               <ProfileInfo>
-                <ProfileName>서연</ProfileName>
-                <EditButton>수정</EditButton>
+                <ProfileName>김세종</ProfileName>
               </ProfileInfo>
-              <StudentNumber>24061526</StudentNumber>
-              
+              <StudentNumber>25012345</StudentNumber>
+
               <PasswordLink>비밀번호 수정</PasswordLink>
               <WithdrawText onClick={handleWithdraw}>회원탈퇴</WithdrawText>
             </ProfileContent>
@@ -151,13 +178,12 @@ const MyPage = () => {
             </PostList>
           </MyInfoSection>
         </LeftPanel>
-
         <MiddlePanel>
           <SectionTitle>쪽지함</SectionTitle>
           <ChatUserList>
-            {dummyChatUsers.map((user) => (
-              <ChatUserCard 
-                key={user.id} 
+            {chatUsers.map((user) => (
+              <ChatUserCard
+                key={user.id}
                 onClick={() => handleUserClick(user)}
                 isSelected={selectedUser?.id === user.id}
               >
@@ -179,7 +205,14 @@ const MyPage = () => {
                 <ChatUserIcon />
                 <ChatUserName>{selectedUser.name}</ChatUserName>
               </ChatHeader>
-              
+
+              {getPostTitle(selectedUser.id) && (
+                <PostInfoBanner>
+                  <PostInfoIcon>📝</PostInfoIcon>
+                  <PostInfoText>{getPostTitle(selectedUser.id)}</PostInfoText>
+                </PostInfoBanner>
+              )}
+
               <ChatMessagesContainer>
                 {messages.map((msg) => (
                   <ChatMessage key={msg.id} isMine={msg.senderId === 99}>
@@ -190,11 +223,11 @@ const MyPage = () => {
                   </ChatMessage>
                 ))}
               </ChatMessagesContainer>
-              
+
               <MessageInputContainer>
-                <MessageInputField 
-                  type="text" 
-                  placeholder="메시지를 입력하세요..." 
+                <MessageInputField
+                  type="text"
+                  placeholder="메시지를 입력하세요..."
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
@@ -218,6 +251,7 @@ const MyPage = () => {
 };
 
 export default MyPage;
+
 
 const PageWrapper = styled.div`
   background-color: transparent; /* f5f5f5 대신 투명하게 변경 */
@@ -294,20 +328,6 @@ const ProfileName = styled.h2`
   font-size: 1.3rem;
   font-weight: bold;
   margin: 0;
-`;
-
-const EditButton = styled.button`
-  background: none;
-  border: 1px solid #ddd;
-  color: #666;
-  font-size: 0.8rem;
-  padding: 0.3rem 0.8rem;
-  border-radius: 4px;
-  cursor: pointer;
-  
-  &:hover {
-    background: #f5f5f5;
-  }
 `;
 
 const StudentNumber = styled.div`
@@ -548,4 +568,24 @@ const BottomButton = styled.button`
   &:hover {
     background: #f5f5f5;
   }
+`;
+
+
+const PostInfoBanner = styled.div`
+  background: #f0f0ff;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+const PostInfoIcon = styled.span`
+  font-size: 1rem;
+`;
+
+const PostInfoText = styled.span`
+  color: #5b4cdb;
+  font-size: 0.85rem;
+  font-weight: 500;
 `;

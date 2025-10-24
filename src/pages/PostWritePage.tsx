@@ -15,14 +15,68 @@ interface Post {
 }
 
 // 분실물 임시 데이터
-const allPosts: Post[] = Array.from({ length: 100 }, (_, i) => ({
-  id: 100 - i,
-  title: i % 3 === 0 ? '광개토관에서 에어팟 잃어버렸어요' : i % 3 === 1 ? '도서관에서 지갑 분실' : '학생회관에서 핸드폰 잃어버림',
-  lostDate: '25.08.15',
-  lostLocation: i % 3 === 0 ? '광개토관' : i % 3 === 1 ? '도서관' : '학생회관',
-  itemCategory: i % 3 === 0 ? '전자기기' : i % 3 === 1 ? '지갑' : '전자기기',
-  itemStatus: '찾는중'
-}));
+const allPosts: Post[] = Array.from({ length: 100 }, (_, i) => {
+  const id = 100 - i;
+
+  // 96번 ~ 100번(= id 96..100)은 완전히 다른 임시 데이터로 채움
+  if (id >= 96) {
+    const special: Omit<Post, 'id'>[] = [
+      {
+        title: '운동장에서 열쇠를 잃어버렸습니다',
+        lostDate: '25.10.02',
+        lostLocation: '운동장',
+        itemCategory: '열쇠',
+        itemStatus: '찾는중'
+      },
+      {
+        title: '기숙사 3층 복도에서 핑크색 텀블러 분실',
+        lostDate: '25.10.01',
+        lostLocation: '기숙사 3층',
+        itemCategory: '주방용품',
+        itemStatus: '찾는중'
+      },
+      {
+        title: '학생회관 식당에서 신분증 분실',
+        lostDate: '25.09.30',
+        lostLocation: '학생회관 식당',
+        itemCategory: '신분증',
+        itemStatus: '찾는중'
+      },
+      {
+        title: '영실관 B01강의실에 25학번 기계공항과 과잠 분실',
+        lostDate: '25.09.28',
+        lostLocation: '영실관',
+        itemCategory: '의류',
+        itemStatus: '찾는중'
+      },
+      {
+        title: '군자관 서점에서 지갑 분실',
+        lostDate: '25.09.27',
+        lostLocation: '군자관',
+        itemCategory: '전자기기',
+        itemStatus: '찾는중'
+      }
+    ];
+
+    const specialIndex = 100 - id;
+    const s = special[specialIndex]!;
+    return { id, ...s };
+  }
+
+  return {
+    id,
+    title:
+      i % 3 === 0
+        ? '광개토관에서 에어팟 잃어버렸어요'
+        : i % 3 === 1
+          ? '도서관에서 지갑 분실'
+          : '학생회관에서 핸드폰 잃어버림',
+    lostDate: '25.08.15',
+    lostLocation: i % 3 === 0 ? '광개토관' : i % 3 === 1 ? '도서관' : '학생회관',
+    itemCategory: i % 3 === 0 ? '전자기기' : i % 3 === 1 ? '지갑' : '전자기기',
+    itemStatus: '완료'
+  };
+});
 
 const POSTS_PER_PAGE = 20;
 
@@ -76,7 +130,7 @@ const PostWritePage = () => {
   const currentPosts = filteredPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
 
   const handlePostClick = (postId: number) => {
-    navigate(`/posts/${postId}`);
+    navigate(`/lost/${postId}`);
   };
 
   const handleWriteClick = () => {
@@ -91,11 +145,11 @@ const PostWritePage = () => {
     const maxVisible = 5;
     const start = Math.max(1, currentPage - 2);
     const end = Math.min(totalPages, start + maxVisible - 1);
-    
+
     return Array.from({ length: end - start + 1 }, (_, i) => start + i);
   };
 
-return (
+  return (
     <PageWrapper>
       <Header />
 
@@ -115,24 +169,24 @@ return (
             <img src={cameraIcon} alt="이미지 검색" />
           </SearchIcon>
         </SearchWrapper>
-        <input 
-          type="file" 
-          accept="image/*" 
-          ref={fileInputRef} 
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
           onChange={handleFileChange}
-          style={{ display: 'none' }} 
+          style={{ display: 'none' }}
         />
       </SearchContainer>
 
       <ButtonGroup>
-        <TabButton 
-          $active={type === 'lost'} 
+        <TabButton
+          $active={type === 'lost'}
           onClick={() => navigate('/lost')}  // 현재 페이지 유지
         >
           분실물
         </TabButton>
-        <TabButton 
-          $active={type === 'found'} 
+        <TabButton
+          $active={type === 'found'}
           onClick={() => navigate('/found')}  // PostListPage로 이동
         >
           습득물
@@ -140,7 +194,7 @@ return (
         <EveryTimeButton>에브리타임</EveryTimeButton>
       </ButtonGroup>
 
-      
+
       <PostContainer>
         <TableContainer>
           <TableHeader>
@@ -151,7 +205,7 @@ return (
             <HeaderCell style={{ width: '12%' }}>물품분류</HeaderCell>
             <HeaderCell style={{ width: '15%' }}>물품상태</HeaderCell>
           </TableHeader>
-          
+
           {currentPosts.length > 0 ? (
             currentPosts.map((post) => (
               <PostRow key={post.id} onClick={() => handlePostClick(post.id)}>
@@ -173,15 +227,15 @@ return (
         {filteredPosts.length > 0 && (
           <PaginationContainer>
             <Pagination>
-              <PageButton 
+              <PageButton
                 onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
                 disabled={currentPage === 1}
               >
                 ‹
               </PageButton>
-              
+
               {getVisiblePages().map((pageNum) => (
-                <PageNumber 
+                <PageNumber
                   key={pageNum}
                   $active={pageNum === currentPage}
                   onClick={() => handlePageChange(pageNum)}
@@ -189,15 +243,15 @@ return (
                   {pageNum}
                 </PageNumber>
               ))}
-              
-              <PageButton 
+
+              <PageButton
                 onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
                 disabled={currentPage === totalPages}
               >
                 ›
               </PageButton>
             </Pagination>
-            
+
             <WriteButton onClick={handleWriteClick}>
               글쓰기
             </WriteButton>
