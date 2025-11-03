@@ -19,8 +19,8 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose, onSwitchToLo
   const [confirmPassword, setConfirmPassword] = useState('');
   const [nickname, setNickname] = useState('');
   const [isIdChecked, setIsIdChecked] = useState(false);
-  const navigate = useNavigate();
-  const { setUser } = useAuth();
+  // const navigate = useNavigate();
+  // const { setUser } = useAuth();
 
   if (!isOpen) return null;
 
@@ -69,9 +69,9 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose, onSwitchToLo
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose}>×</CloseButton>
-        
+
         <Logo src={logoImage} alt="세만추 로고" />
-        
+
         <InputWrapper>
           <Icon src={userIcon} alt="user icon" />
           <InputField
@@ -100,7 +100,7 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose, onSwitchToLo
             중복확인
           </CheckButton>
         </IdCheckWrapper>
-        
+
         <InputWrapper>
           <Icon src={lockIcon} alt="lock icon" />
           <InputField
@@ -120,9 +120,9 @@ const SignupModal: React.FC<SignupModalProps> = ({ isOpen, onClose, onSwitchToLo
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </InputWrapper>
-        
+
         <SignupButton onClick={handleSignup}>회원가입</SignupButton>
-        
+
         <LinkText>
           이미 계정이 있으신가요? <LinkButton onClick={onSwitchToLogin}>로그인</LinkButton>
         </LinkText>

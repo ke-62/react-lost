@@ -57,9 +57,9 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitchToSign
     <ModalOverlay onClick={onClose}>
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose}>×</CloseButton>
-        
+
         <Logo src={logoImage} alt="세만추 로고" />
-        
+
         <InputWrapper>
           <Icon src={userIcon} alt="user icon" />
           <InputField
@@ -85,7 +85,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose, onSwitchToSign
         )}
 
         <LoginButton onClick={handleLogin}>로그인</LoginButton>
-        
+
         <BottomLinks>
           <LinkButton>아이디 찾기</LinkButton>
           <Separator>|</Separator>
@@ -166,6 +166,8 @@ const Icon = styled.img`
   height: 20px;
   opacity: 0.6;
 `;
+
+
 
 const InputField = styled.input`
   width: 100%;
